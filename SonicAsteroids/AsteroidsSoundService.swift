@@ -33,6 +33,10 @@ class AsteroidsSoundService: NSObject {
     var seenBullets : [Int: Bullet]
     var seenExplosions : [Explosion]
     
+    var explosionAudioFiles : [NSData]
+    var bulletAudioFiles : [NSData]
+
+    
     override init() {
         engine = AVAudioEngine()
         playerAtmos = AVAudioPlayerNode()
@@ -46,11 +50,30 @@ class AsteroidsSoundService: NSObject {
         bulletData = NSData(contentsOfURL: NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("Velocity Zapper_bip1", ofType: "mp3")!))
         explosionData = NSData(contentsOfURL: NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("5", ofType: "mp3")!))
         
+        explosionAudioFiles = [NSData]()
+        for file : String in ["1", "3", "5", "7", "9", "11", "12"] {
+            let path = NSBundle.mainBundle().pathForResource(file, ofType: "mp3")
+            let url = NSURL.fileURLWithPath(path!)
+            if let data = NSData(contentsOfURL: url) {
+                explosionAudioFiles.append(data)
+            }
+        }
+        bulletAudioFiles = [NSData]()
+        for file : String in ["Velocity Zapper_bip1", "Velocity Zapper_bip5", "Velocity Zapper_bip7", "Velocity Zapper_bip9", "Velocity Zapper_bip11", "Velocity Zapper_bip13", "Velocity Zapper_bip15", "Velocity Zapper_bip17", "Velocity Zapper_bip18"] {
+            let path = NSBundle.mainBundle().pathForResource(file, ofType: "mp3")
+            let url = NSURL.fileURLWithPath(path!)
+            if let data = NSData(contentsOfURL: url) {
+                bulletAudioFiles.append(data)
+            }
+        }
+        
         bullet = AsteroidsSoundService.setupAudioPlayerWithFile("Velocity Zapper_bip1", type: "mp3")
         explosion = AsteroidsSoundService.setupAudioPlayerWithFile("5", type: "mp3")
         
         seenBullets = [Int: Bullet]()
         seenExplosions = [Explosion]()
+        
+        
     }
     
     static func setupAudioPlayerWithFile(file:NSString, type:NSString) -> AVAudioPlayer?  {
@@ -66,6 +89,18 @@ class AsteroidsSoundService: NSObject {
         }
         
         return audioPlayer
+    }
+    
+    func getRandomAudioPlayer(withArray: [NSData]) -> AVAudioPlayer? {
+        var player : AVAudioPlayer?
+        do {
+            let randomIndex = Int(arc4random_uniform(UInt32(withArray.count)))
+            try player = AVAudioPlayer(data: withArray[randomIndex])
+        } catch {
+            print("Couldn't find data")
+        }
+        
+        return player
     }
 
     
@@ -198,7 +233,7 @@ struct Explosion {
     init(atX: Int, atY: Int) {
         x = atX
         y = atY
-        player = AsteroidsSoundService.setupAudioPlayerWithFile("5", type: "mp3")
+        player = AsteroidsSoundService.INSTANCE.getRandomAudioPlayer(AsteroidsSoundService.INSTANCE.explosionAudioFiles)
         player!.volume = 0.3
         player!.prepareToPlay()
     }
@@ -216,7 +251,7 @@ struct Bullet {
     init(atX: Int, atY: Int) {
         x = atX
         y = atY
-        player = AsteroidsSoundService.setupAudioPlayerWithFile("Velocity Zapper_bip1", type: "mp3")
+        player = AsteroidsSoundService.INSTANCE.getRandomAudioPlayer(AsteroidsSoundService.INSTANCE.bulletAudioFiles)
         player!.prepareToPlay()
     }
     func play() {

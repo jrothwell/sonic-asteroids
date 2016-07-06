@@ -5,6 +5,22 @@
    <BuildAction
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES">
+      <BuildActionEntries>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "8B9D9C461D2AE79C00C82A8F"
+               BuildableName = "SonicAsteroids.app"
+               BlueprintName = "SonicAsteroids"
+               ReferencedContainer = "container:SonicAsteroids.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+      </BuildActionEntries>
    </BuildAction>
    <TestAction
       buildConfiguration = "Debug"
@@ -12,7 +28,36 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "8B9D9C571D2AE79C00C82A8F"
+               BuildableName = "SonicAsteroidsTests.xctest"
+               BlueprintName = "SonicAsteroidsTests"
+               ReferencedContainer = "container:SonicAsteroids.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "8B9D9C621D2AE79C00C82A8F"
+               BuildableName = "SonicAsteroidsUITests.xctest"
+               BlueprintName = "SonicAsteroidsUITests"
+               ReferencedContainer = "container:SonicAsteroids.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "8B9D9C461D2AE79C00C82A8F"
+            BuildableName = "SonicAsteroids.app"
+            BlueprintName = "SonicAsteroids"
+            ReferencedContainer = "container:SonicAsteroids.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -26,6 +71,16 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "8B9D9C461D2AE79C00C82A8F"
+            BuildableName = "SonicAsteroids.app"
+            BlueprintName = "SonicAsteroids"
+            ReferencedContainer = "container:SonicAsteroids.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -35,6 +90,16 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "8B9D9C461D2AE79C00C82A8F"
+            BuildableName = "SonicAsteroids.app"
+            BlueprintName = "SonicAsteroids"
+            ReferencedContainer = "container:SonicAsteroids.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

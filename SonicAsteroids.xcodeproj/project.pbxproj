@@ -7,12 +7,41 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8B58FBCC1D2C5ED0004786CD /* explosion.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8B58FBCB1D2C5ED0004786CD /* explosion.mp3 */; };
+		8B58FBCE1D2C5F09004786CD /* bullet.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8B58FBCD1D2C5F09004786CD /* bullet.mp3 */; };
+		8B6BB7591D2D306000D92195 /* Mars-action.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8B6BB7561D2D306000D92195 /* Mars-action.mp3 */; };
+		8B6BB75A1D2D306000D92195 /* Mars-atmos.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8B6BB7571D2D306000D92195 /* Mars-atmos.mp3 */; };
+		8B6BB75B1D2D306000D92195 /* Mars-bass.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8B6BB7581D2D306000D92195 /* Mars-bass.mp3 */; };
+		8B6BB7671D2D33B600D92195 /* Velocity Zapper_bip1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8B6BB75E1D2D33B600D92195 /* Velocity Zapper_bip1.mp3 */; };
+		8B6BB7681D2D33B600D92195 /* Velocity Zapper_bip5.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8B6BB75F1D2D33B600D92195 /* Velocity Zapper_bip5.mp3 */; };
+		8B6BB7691D2D33B600D92195 /* Velocity Zapper_bip7.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8B6BB7601D2D33B600D92195 /* Velocity Zapper_bip7.mp3 */; };
+		8B6BB76A1D2D33B600D92195 /* Velocity Zapper_bip9.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8B6BB7611D2D33B600D92195 /* Velocity Zapper_bip9.mp3 */; };
+		8B6BB76B1D2D33B600D92195 /* Velocity Zapper_bip11.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8B6BB7621D2D33B600D92195 /* Velocity Zapper_bip11.mp3 */; };
+		8B6BB76C1D2D33B600D92195 /* Velocity Zapper_bip13.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8B6BB7631D2D33B600D92195 /* Velocity Zapper_bip13.mp3 */; };
+		8B6BB76D1D2D33B600D92195 /* Velocity Zapper_bip15.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8B6BB7641D2D33B600D92195 /* Velocity Zapper_bip15.mp3 */; };
+		8B6BB76E1D2D33B600D92195 /* Velocity Zapper_bip17.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8B6BB7651D2D33B600D92195 /* Velocity Zapper_bip17.mp3 */; };
+		8B6BB76F1D2D33B600D92195 /* Velocity Zapper_bip18.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8B6BB7661D2D33B600D92195 /* Velocity Zapper_bip18.mp3 */; };
+		8B6BB7781D2D33CD00D92195 /* 1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8B6BB7711D2D33CD00D92195 /* 1.mp3 */; };
+		8B6BB7791D2D33CD00D92195 /* 3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8B6BB7721D2D33CD00D92195 /* 3.mp3 */; };
+		8B6BB77A1D2D33CD00D92195 /* 5.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8B6BB7731D2D33CD00D92195 /* 5.mp3 */; };
+		8B6BB77B1D2D33CD00D92195 /* 7.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8B6BB7741D2D33CD00D92195 /* 7.mp3 */; };
+		8B6BB77C1D2D33CD00D92195 /* 9.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8B6BB7751D2D33CD00D92195 /* 9.mp3 */; };
+		8B6BB77D1D2D33CD00D92195 /* 11.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8B6BB7761D2D33CD00D92195 /* 11.mp3 */; };
+		8B6BB77E1D2D33CD00D92195 /* 12.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8B6BB7771D2D33CD00D92195 /* 12.mp3 */; };
 		8B9D9C4B1D2AE79C00C82A8F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9D9C4A1D2AE79C00C82A8F /* AppDelegate.swift */; };
 		8B9D9C4D1D2AE79C00C82A8F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9D9C4C1D2AE79C00C82A8F /* ViewController.swift */; };
 		8B9D9C4F1D2AE79C00C82A8F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B9D9C4E1D2AE79C00C82A8F /* Assets.xcassets */; };
 		8B9D9C521D2AE79C00C82A8F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B9D9C501D2AE79C00C82A8F /* Main.storyboard */; };
 		8B9D9C5D1D2AE79C00C82A8F /* SonicAsteroidsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9D9C5C1D2AE79C00C82A8F /* SonicAsteroidsTests.swift */; };
 		8B9D9C681D2AE79C00C82A8F /* SonicAsteroidsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9D9C671D2AE79C00C82A8F /* SonicAsteroidsUITests.swift */; };
+		8B9D9C781D2B181000C82A8F /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B9D9C771D2B181000C82A8F /* Starscream.framework */; };
+		8B9D9C791D2B181000C82A8F /* Starscream.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8B9D9C771D2B181000C82A8F /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8B9D9C7D1D2B184000C82A8F /* Starscream.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8B9D9C7C1D2B184000C82A8F /* Starscream.framework.dSYM */; };
+		8B9D9C7F1D2B185A00C82A8F /* AsteroidsGameService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9D9C7E1D2B185A00C82A8F /* AsteroidsGameService.swift */; };
+		8B9D9C831D2B404400C82A8F /* AsteroidsSoundService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9D9C821D2B404400C82A8F /* AsteroidsSoundService.swift */; };
+		8BAE74D61D2BE4C80039FEE5 /* Gloss.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BAE74D51D2BE4C80039FEE5 /* Gloss.framework */; };
+		8BAE74D71D2BE4C80039FEE5 /* Gloss.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8BAE74D51D2BE4C80039FEE5 /* Gloss.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8BAE74D91D2BE4D20039FEE5 /* Gloss.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8BAE74D81D2BE4D20039FEE5 /* Gloss.framework.dSYM */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,7 +61,54 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		8B9D9C7A1D2B181000C82A8F /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				8B9D9C791D2B181000C82A8F /* Starscream.framework in Embed Frameworks */,
+				8BAE74D71D2BE4C80039FEE5 /* Gloss.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8B9D9C7B1D2B182B00C82A8F /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				8B9D9C7D1D2B184000C82A8F /* Starscream.framework.dSYM in CopyFiles */,
+				8BAE74D91D2BE4D20039FEE5 /* Gloss.framework.dSYM in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		8B58FBCB1D2C5ED0004786CD /* explosion.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = explosion.mp3; sourceTree = "<group>"; };
+		8B58FBCD1D2C5F09004786CD /* bullet.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = bullet.mp3; sourceTree = "<group>"; };
+		8B6BB7561D2D306000D92195 /* Mars-action.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Mars-action.mp3"; sourceTree = "<group>"; };
+		8B6BB7571D2D306000D92195 /* Mars-atmos.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Mars-atmos.mp3"; sourceTree = "<group>"; };
+		8B6BB7581D2D306000D92195 /* Mars-bass.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Mars-bass.mp3"; sourceTree = "<group>"; };
+		8B6BB75E1D2D33B600D92195 /* Velocity Zapper_bip1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Velocity Zapper_bip1.mp3"; sourceTree = "<group>"; };
+		8B6BB75F1D2D33B600D92195 /* Velocity Zapper_bip5.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Velocity Zapper_bip5.mp3"; sourceTree = "<group>"; };
+		8B6BB7601D2D33B600D92195 /* Velocity Zapper_bip7.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Velocity Zapper_bip7.mp3"; sourceTree = "<group>"; };
+		8B6BB7611D2D33B600D92195 /* Velocity Zapper_bip9.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Velocity Zapper_bip9.mp3"; sourceTree = "<group>"; };
+		8B6BB7621D2D33B600D92195 /* Velocity Zapper_bip11.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Velocity Zapper_bip11.mp3"; sourceTree = "<group>"; };
+		8B6BB7631D2D33B600D92195 /* Velocity Zapper_bip13.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Velocity Zapper_bip13.mp3"; sourceTree = "<group>"; };
+		8B6BB7641D2D33B600D92195 /* Velocity Zapper_bip15.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Velocity Zapper_bip15.mp3"; sourceTree = "<group>"; };
+		8B6BB7651D2D33B600D92195 /* Velocity Zapper_bip17.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Velocity Zapper_bip17.mp3"; sourceTree = "<group>"; };
+		8B6BB7661D2D33B600D92195 /* Velocity Zapper_bip18.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Velocity Zapper_bip18.mp3"; sourceTree = "<group>"; };
+		8B6BB7711D2D33CD00D92195 /* 1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = 1.mp3; sourceTree = "<group>"; };
+		8B6BB7721D2D33CD00D92195 /* 3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = 3.mp3; sourceTree = "<group>"; };
+		8B6BB7731D2D33CD00D92195 /* 5.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = 5.mp3; sourceTree = "<group>"; };
+		8B6BB7741D2D33CD00D92195 /* 7.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = 7.mp3; sourceTree = "<group>"; };
+		8B6BB7751D2D33CD00D92195 /* 9.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = 9.mp3; sourceTree = "<group>"; };
+		8B6BB7761D2D33CD00D92195 /* 11.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = 11.mp3; sourceTree = "<group>"; };
+		8B6BB7771D2D33CD00D92195 /* 12.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = 12.mp3; sourceTree = "<group>"; };
 		8B9D9C471D2AE79C00C82A8F /* SonicAsteroids.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SonicAsteroids.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B9D9C4A1D2AE79C00C82A8F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8B9D9C4C1D2AE79C00C82A8F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -45,6 +121,12 @@
 		8B9D9C631D2AE79C00C82A8F /* SonicAsteroidsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SonicAsteroidsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B9D9C671D2AE79C00C82A8F /* SonicAsteroidsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SonicAsteroidsUITests.swift; sourceTree = "<group>"; };
 		8B9D9C691D2AE79C00C82A8F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8B9D9C771D2B181000C82A8F /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/Mac/Starscream.framework; sourceTree = "<group>"; };
+		8B9D9C7C1D2B184000C82A8F /* Starscream.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Starscream.framework.dSYM; path = Carthage/Build/Mac/Starscream.framework.dSYM; sourceTree = "<group>"; };
+		8B9D9C7E1D2B185A00C82A8F /* AsteroidsGameService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsteroidsGameService.swift; sourceTree = "<group>"; };
+		8B9D9C821D2B404400C82A8F /* AsteroidsSoundService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsteroidsSoundService.swift; sourceTree = "<group>"; };
+		8BAE74D51D2BE4C80039FEE5 /* Gloss.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Gloss.framework; path = Carthage/Build/Mac/Gloss.framework; sourceTree = "<group>"; };
+		8BAE74D81D2BE4D20039FEE5 /* Gloss.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Gloss.framework.dSYM; path = Carthage/Build/Mac/Gloss.framework.dSYM; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +134,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B9D9C781D2B181000C82A8F /* Starscream.framework in Frameworks */,
+				8BAE74D61D2BE4C80039FEE5 /* Gloss.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,9 +156,58 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8B6BB75C1D2D306600D92195 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8B6BB7701D2D33BC00D92195 /* Explosions */,
+				8B6BB75D1D2D33A600D92195 /* Bullets */,
+				8B6BB7561D2D306000D92195 /* Mars-action.mp3 */,
+				8B6BB7571D2D306000D92195 /* Mars-atmos.mp3 */,
+				8B6BB7581D2D306000D92195 /* Mars-bass.mp3 */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		8B6BB75D1D2D33A600D92195 /* Bullets */ = {
+			isa = PBXGroup;
+			children = (
+				8B6BB75E1D2D33B600D92195 /* Velocity Zapper_bip1.mp3 */,
+				8B6BB75F1D2D33B600D92195 /* Velocity Zapper_bip5.mp3 */,
+				8B6BB7601D2D33B600D92195 /* Velocity Zapper_bip7.mp3 */,
+				8B6BB7611D2D33B600D92195 /* Velocity Zapper_bip9.mp3 */,
+				8B6BB7621D2D33B600D92195 /* Velocity Zapper_bip11.mp3 */,
+				8B6BB7631D2D33B600D92195 /* Velocity Zapper_bip13.mp3 */,
+				8B6BB7641D2D33B600D92195 /* Velocity Zapper_bip15.mp3 */,
+				8B6BB7651D2D33B600D92195 /* Velocity Zapper_bip17.mp3 */,
+				8B6BB7661D2D33B600D92195 /* Velocity Zapper_bip18.mp3 */,
+			);
+			name = Bullets;
+			sourceTree = "<group>";
+		};
+		8B6BB7701D2D33BC00D92195 /* Explosions */ = {
+			isa = PBXGroup;
+			children = (
+				8B6BB7711D2D33CD00D92195 /* 1.mp3 */,
+				8B6BB7721D2D33CD00D92195 /* 3.mp3 */,
+				8B6BB7731D2D33CD00D92195 /* 5.mp3 */,
+				8B6BB7741D2D33CD00D92195 /* 7.mp3 */,
+				8B6BB7751D2D33CD00D92195 /* 9.mp3 */,
+				8B6BB7761D2D33CD00D92195 /* 11.mp3 */,
+				8B6BB7771D2D33CD00D92195 /* 12.mp3 */,
+			);
+			name = Explosions;
+			sourceTree = "<group>";
+		};
 		8B9D9C3E1D2AE79C00C82A8F = {
 			isa = PBXGroup;
 			children = (
+				8B6BB75C1D2D306600D92195 /* Resources */,
+				8B58FBCD1D2C5F09004786CD /* bullet.mp3 */,
+				8B58FBCB1D2C5ED0004786CD /* explosion.mp3 */,
+				8BAE74D81D2BE4D20039FEE5 /* Gloss.framework.dSYM */,
+				8BAE74D51D2BE4C80039FEE5 /* Gloss.framework */,
+				8B9D9C7C1D2B184000C82A8F /* Starscream.framework.dSYM */,
+				8B9D9C771D2B181000C82A8F /* Starscream.framework */,
 				8B9D9C491D2AE79C00C82A8F /* SonicAsteroids */,
 				8B9D9C5B1D2AE79C00C82A8F /* SonicAsteroidsTests */,
 				8B9D9C661D2AE79C00C82A8F /* SonicAsteroidsUITests */,
@@ -100,6 +233,8 @@
 				8B9D9C4E1D2AE79C00C82A8F /* Assets.xcassets */,
 				8B9D9C501D2AE79C00C82A8F /* Main.storyboard */,
 				8B9D9C531D2AE79C00C82A8F /* Info.plist */,
+				8B9D9C7E1D2B185A00C82A8F /* AsteroidsGameService.swift */,
+				8B9D9C821D2B404400C82A8F /* AsteroidsSoundService.swift */,
 			);
 			path = SonicAsteroids;
 			sourceTree = "<group>";
@@ -132,6 +267,8 @@
 				8B9D9C431D2AE79C00C82A8F /* Sources */,
 				8B9D9C441D2AE79C00C82A8F /* Frameworks */,
 				8B9D9C451D2AE79C00C82A8F /* Resources */,
+				8B9D9C7A1D2B181000C82A8F /* Embed Frameworks */,
+				8B9D9C7B1D2B182B00C82A8F /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -226,8 +363,29 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B6BB7691D2D33B600D92195 /* Velocity Zapper_bip7.mp3 in Resources */,
+				8B6BB76C1D2D33B600D92195 /* Velocity Zapper_bip13.mp3 in Resources */,
+				8B6BB77B1D2D33CD00D92195 /* 7.mp3 in Resources */,
+				8B6BB76A1D2D33B600D92195 /* Velocity Zapper_bip9.mp3 in Resources */,
+				8B6BB77D1D2D33CD00D92195 /* 11.mp3 in Resources */,
+				8B58FBCE1D2C5F09004786CD /* bullet.mp3 in Resources */,
+				8B6BB7681D2D33B600D92195 /* Velocity Zapper_bip5.mp3 in Resources */,
+				8B6BB76B1D2D33B600D92195 /* Velocity Zapper_bip11.mp3 in Resources */,
+				8B58FBCC1D2C5ED0004786CD /* explosion.mp3 in Resources */,
+				8B6BB7671D2D33B600D92195 /* Velocity Zapper_bip1.mp3 in Resources */,
 				8B9D9C4F1D2AE79C00C82A8F /* Assets.xcassets in Resources */,
+				8B6BB77A1D2D33CD00D92195 /* 5.mp3 in Resources */,
 				8B9D9C521D2AE79C00C82A8F /* Main.storyboard in Resources */,
+				8B6BB77C1D2D33CD00D92195 /* 9.mp3 in Resources */,
+				8B6BB7781D2D33CD00D92195 /* 1.mp3 in Resources */,
+				8B6BB76E1D2D33B600D92195 /* Velocity Zapper_bip17.mp3 in Resources */,
+				8B6BB7791D2D33CD00D92195 /* 3.mp3 in Resources */,
+				8B6BB76F1D2D33B600D92195 /* Velocity Zapper_bip18.mp3 in Resources */,
+				8B6BB76D1D2D33B600D92195 /* Velocity Zapper_bip15.mp3 in Resources */,
+				8B6BB77E1D2D33CD00D92195 /* 12.mp3 in Resources */,
+				8B6BB75A1D2D306000D92195 /* Mars-atmos.mp3 in Resources */,
+				8B6BB75B1D2D306000D92195 /* Mars-bass.mp3 in Resources */,
+				8B6BB7591D2D306000D92195 /* Mars-action.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -254,6 +412,8 @@
 			files = (
 				8B9D9C4D1D2AE79C00C82A8F /* ViewController.swift in Sources */,
 				8B9D9C4B1D2AE79C00C82A8F /* AppDelegate.swift in Sources */,
+				8B9D9C831D2B404400C82A8F /* AsteroidsSoundService.swift in Sources */,
+				8B9D9C7F1D2B185A00C82A8F /* AsteroidsGameService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -387,6 +547,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = SonicAsteroids/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zuhlke.SonicAsteroids;
@@ -399,6 +563,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = SonicAsteroids/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zuhlke.SonicAsteroids;
@@ -475,6 +643,7 @@
 				8B9D9C6E1D2AE79C00C82A8F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8B9D9C6F1D2AE79C00C82A8F /* Build configuration list for PBXNativeTarget "SonicAsteroidsTests" */ = {
 			isa = XCConfigurationList;
@@ -483,6 +652,7 @@
 				8B9D9C711D2AE79C00C82A8F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8B9D9C721D2AE79C00C82A8F /* Build configuration list for PBXNativeTarget "SonicAsteroidsUITests" */ = {
 			isa = XCConfigurationList;
@@ -491,6 +661,7 @@
 				8B9D9C741D2AE79C00C82A8F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

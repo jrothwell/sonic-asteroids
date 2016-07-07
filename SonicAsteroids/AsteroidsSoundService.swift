@@ -35,16 +35,18 @@ class AsteroidsSoundService: NSObject {
     
     var explosionAudioFiles : [NSData]
     var bulletAudioFiles : [NSData]
-
+    
+    var dispatchQueueBulletNoises : dispatch_queue_t
+    var dispatchQueueExplosionNoises : dispatch_queue_t
     
     override init() {
         engine = AVAudioEngine()
         playerAtmos = AVAudioPlayerNode()
         playerBass = AVAudioPlayerNode()
         playerAction = AVAudioPlayerNode()
-        playerAtmos.volume = 0.8
-        playerBass.volume = 0.4
-        playerAction.volume = 1.0
+        playerAtmos.volume = 0.2
+        playerBass.volume = 0.0
+        playerAction.volume = 0.2
         
         
         bulletData = NSData(contentsOfURL: NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("Velocity Zapper_bip1", ofType: "mp3")!))
@@ -73,6 +75,9 @@ class AsteroidsSoundService: NSObject {
         seenBullets = [Int: Bullet]()
         seenExplosions = [Explosion]()
         
+        dispatchQueueBulletNoises = dispatch_queue_create("com.zuhlke.asteroids", DISPATCH_QUEUE_SERIAL)
+        dispatchQueueExplosionNoises = dispatch_queue_create("com.zuhlke.asteroids", DISPATCH_QUEUE_SERIAL)
+
         
     }
     
@@ -173,8 +178,9 @@ class AsteroidsSoundService: NSObject {
     }
     
     func processSound(withText: String) {
-//        print("Making noise with this: \(withText)")
         
+        let date = NSDate()
+        print("Got deserialisable report at \(date.timeIntervalSince1970)")
         var json : Payload!
         
         do {
@@ -197,14 +203,20 @@ class AsteroidsSoundService: NSObject {
         print("I see \(bullets.count) bullets and \(explosions.count) explosions");
         
         for bullet in bullets {
-            makeBulletNoise(bullet)
+            dispatch_async(dispatchQueueBulletNoises) {
+                 self.makeBulletNoise(bullet)
+            }
         }
         
         for explosion in explosions {
-            makeExplosionNoise(explosion)
+            dispatch_async(dispatchQueueExplosionNoises) {
+                self.makeExplosionNoise(explosion)
+            }
+            
         }
         
-        playExplosionSound()
+        playerBass.volume = min(Float(bullets.count) / 40.0, Float(0.3))
+
     }
     
     func makeBulletNoise(bulletInfo : [Int]) {
@@ -234,7 +246,7 @@ struct Explosion {
         x = atX
         y = atY
         player = AsteroidsSoundService.INSTANCE.getRandomAudioPlayer(AsteroidsSoundService.INSTANCE.explosionAudioFiles)
-        player!.volume = 0.3
+        player!.volume = 0.9
         player!.prepareToPlay()
     }
     
@@ -252,6 +264,7 @@ struct Bullet {
         x = atX
         y = atY
         player = AsteroidsSoundService.INSTANCE.getRandomAudioPlayer(AsteroidsSoundService.INSTANCE.bulletAudioFiles)
+        player!.volume = 0.6
         player!.prepareToPlay()
     }
     func play() {

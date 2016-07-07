@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8B58FBCC1D2C5ED0004786CD /* explosion.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8B58FBCB1D2C5ED0004786CD /* explosion.mp3 */; };
-		8B58FBCE1D2C5F09004786CD /* bullet.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8B58FBCD1D2C5F09004786CD /* bullet.mp3 */; };
 		8B6BB7591D2D306000D92195 /* Mars-action.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8B6BB7561D2D306000D92195 /* Mars-action.mp3 */; };
 		8B6BB75A1D2D306000D92195 /* Mars-atmos.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8B6BB7571D2D306000D92195 /* Mars-atmos.mp3 */; };
 		8B6BB75B1D2D306000D92195 /* Mars-bass.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8B6BB7581D2D306000D92195 /* Mars-bass.mp3 */; };
@@ -88,8 +86,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		8B58FBCB1D2C5ED0004786CD /* explosion.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = explosion.mp3; sourceTree = "<group>"; };
-		8B58FBCD1D2C5F09004786CD /* bullet.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = bullet.mp3; sourceTree = "<group>"; };
 		8B6BB7561D2D306000D92195 /* Mars-action.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Mars-action.mp3"; sourceTree = "<group>"; };
 		8B6BB7571D2D306000D92195 /* Mars-atmos.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Mars-atmos.mp3"; sourceTree = "<group>"; };
 		8B6BB7581D2D306000D92195 /* Mars-bass.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Mars-bass.mp3"; sourceTree = "<group>"; };
@@ -202,8 +198,6 @@
 			isa = PBXGroup;
 			children = (
 				8B6BB75C1D2D306600D92195 /* Resources */,
-				8B58FBCD1D2C5F09004786CD /* bullet.mp3 */,
-				8B58FBCB1D2C5ED0004786CD /* explosion.mp3 */,
 				8BAE74D81D2BE4D20039FEE5 /* Gloss.framework.dSYM */,
 				8BAE74D51D2BE4C80039FEE5 /* Gloss.framework */,
 				8B9D9C7C1D2B184000C82A8F /* Starscream.framework.dSYM */,
@@ -368,10 +362,8 @@
 				8B6BB77B1D2D33CD00D92195 /* 7.mp3 in Resources */,
 				8B6BB76A1D2D33B600D92195 /* Velocity Zapper_bip9.mp3 in Resources */,
 				8B6BB77D1D2D33CD00D92195 /* 11.mp3 in Resources */,
-				8B58FBCE1D2C5F09004786CD /* bullet.mp3 in Resources */,
 				8B6BB7681D2D33B600D92195 /* Velocity Zapper_bip5.mp3 in Resources */,
 				8B6BB76B1D2D33B600D92195 /* Velocity Zapper_bip11.mp3 in Resources */,
-				8B58FBCC1D2C5ED0004786CD /* explosion.mp3 in Resources */,
 				8B6BB7671D2D33B600D92195 /* Velocity Zapper_bip1.mp3 in Resources */,
 				8B9D9C4F1D2AE79C00C82A8F /* Assets.xcassets in Resources */,
 				8B6BB77A1D2D33CD00D92195 /* 5.mp3 in Resources */,

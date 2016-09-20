@@ -14,7 +14,7 @@ class AsteroidsGameService: NSObject, WebSocketDelegate {
     var callback : ((String) -> Void)?
     var socket : WebSocket?
     
-    func connect(url: NSURL, callback: (String) -> Void) {
+    func connect(_ url: URL, callback: @escaping (String) -> Void) {
         socket = WebSocket(url: url)
         self.callback = callback
         socket!.delegate = self
@@ -41,17 +41,17 @@ class AsteroidsGameService: NSObject, WebSocketDelegate {
     
     func websocketDidReceiveMessage(socket: WebSocket, text: String) {
         if let callbackDefinitely = callback {
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 callbackDefinitely(text)
             }
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
+            DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.high).async {
                 AsteroidsSoundService.INSTANCE.processSound(text)
             }
         }
     }
     
-    func websocketDidReceiveData(socket: WebSocket, data: NSData) {
-        print("got some data: \(data.length)")
+    func websocketDidReceiveData(socket: WebSocket, data: Data) {
+        print("got some data: \(data.count)")
     }
 
 }

@@ -25,19 +25,19 @@ class AsteroidsSoundService: NSObject {
     var bullet: AVAudioPlayer?
     var explosion: AVAudioPlayer?
     
-    var bulletData: NSData?
-    var explosionData: NSData?
+    var bulletData: Data?
+    var explosionData: Data?
     
     var playing : Bool = false
     
     var seenBullets : [Int: Bullet]
     var seenExplosions : [Explosion]
     
-    var explosionAudioFiles : [NSData]
-    var bulletAudioFiles : [NSData]
+    var explosionAudioFiles : [Data]
+    var bulletAudioFiles : [Data]
     
-    var dispatchQueueBulletNoises : dispatch_queue_t
-    var dispatchQueueExplosionNoises : dispatch_queue_t
+    var dispatchQueueBulletNoises : DispatchQueue
+    var dispatchQueueExplosionNoises : DispatchQueue
     
     override init() {
         engine = AVAudioEngine()
@@ -49,22 +49,22 @@ class AsteroidsSoundService: NSObject {
         playerAction.volume = 0.2
         
         
-        bulletData = NSData(contentsOfURL: NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("Velocity Zapper_bip1", ofType: "mp3")!))
-        explosionData = NSData(contentsOfURL: NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("5", ofType: "mp3")!))
+        bulletData = try? Data(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "Velocity Zapper_bip1", ofType: "mp3")!))
+        explosionData = try? Data(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "5", ofType: "mp3")!))
         
-        explosionAudioFiles = [NSData]()
+        explosionAudioFiles = [Data]()
         for file : String in ["1", "3", "5", "7", "9", "11", "12"] {
-            let path = NSBundle.mainBundle().pathForResource(file, ofType: "mp3")
-            let url = NSURL.fileURLWithPath(path!)
-            if let data = NSData(contentsOfURL: url) {
+            let path = Bundle.main.path(forResource: file, ofType: "mp3")
+            let url = URL(fileURLWithPath: path!)
+            if let data = try? Data(contentsOf: url) {
                 explosionAudioFiles.append(data)
             }
         }
-        bulletAudioFiles = [NSData]()
+        bulletAudioFiles = [Data]()
         for file : String in ["Velocity Zapper_bip1", "Velocity Zapper_bip5", "Velocity Zapper_bip7", "Velocity Zapper_bip9", "Velocity Zapper_bip11", "Velocity Zapper_bip13", "Velocity Zapper_bip15", "Velocity Zapper_bip17", "Velocity Zapper_bip18"] {
-            let path = NSBundle.mainBundle().pathForResource(file, ofType: "mp3")
-            let url = NSURL.fileURLWithPath(path!)
-            if let data = NSData(contentsOfURL: url) {
+            let path = Bundle.main.path(forResource: file, ofType: "mp3")
+            let url = URL(fileURLWithPath: path!)
+            if let data = try? Data(contentsOf: url) {
                 bulletAudioFiles.append(data)
             }
         }
@@ -75,20 +75,20 @@ class AsteroidsSoundService: NSObject {
         seenBullets = [Int: Bullet]()
         seenExplosions = [Explosion]()
         
-        dispatchQueueBulletNoises = dispatch_queue_create("com.zuhlke.asteroids", DISPATCH_QUEUE_SERIAL)
-        dispatchQueueExplosionNoises = dispatch_queue_create("com.zuhlke.asteroids", DISPATCH_QUEUE_SERIAL)
+        dispatchQueueBulletNoises = DispatchQueue(label: "com.zuhlke.asteroids", attributes: [])
+        dispatchQueueExplosionNoises = DispatchQueue(label: "com.zuhlke.asteroids", attributes: [])
 
         
     }
     
-    static func setupAudioPlayerWithFile(file:NSString, type:NSString) -> AVAudioPlayer?  {
-        let path = NSBundle.mainBundle().pathForResource(file as String, ofType: type as String)
-        let url = NSURL.fileURLWithPath(path!)
+    static func setupAudioPlayerWithFile(_ file:NSString, type:NSString) -> AVAudioPlayer?  {
+        let path = Bundle.main.path(forResource: file as String, ofType: type as String)
+        let url = URL(fileURLWithPath: path!)
         
         var audioPlayer :AVAudioPlayer?
         
         do {
-            try audioPlayer = AVAudioPlayer(contentsOfURL: url)
+            try audioPlayer = AVAudioPlayer(contentsOf: url)
         } catch {
             print("Player not available")
         }
@@ -96,7 +96,7 @@ class AsteroidsSoundService: NSObject {
         return audioPlayer
     }
     
-    func getRandomAudioPlayer(withArray: [NSData]) -> AVAudioPlayer? {
+    func getRandomAudioPlayer(_ withArray: [Data]) -> AVAudioPlayer? {
         var player : AVAudioPlayer?
         do {
             let randomIndex = Int(arc4random_uniform(UInt32(withArray.count)))
@@ -109,41 +109,41 @@ class AsteroidsSoundService: NSObject {
     }
 
     
-    func start(path: String) {
+    func start(_ path: String) {
         guard !playing else {
             print("Already playing...")
             return
         }
         
-        let atmosUrl = NSURL.fileURLWithPath(NSBundle.mainBundle().pathForResource("Mars-atmos", ofType: "mp3")!)
-        let bassUrl = NSURL.fileURLWithPath(NSBundle.mainBundle().pathForResource("Mars-bass", ofType: "mp3")!)
-        let actionUrl = NSURL.fileURLWithPath(NSBundle.mainBundle().pathForResource("Mars-action", ofType: "mp3")!)
+        let atmosUrl = URL(fileURLWithPath: Bundle.main.path(forResource: "Mars-atmos", ofType: "mp3")!)
+        let bassUrl = URL(fileURLWithPath: Bundle.main.path(forResource: "Mars-bass", ofType: "mp3")!)
+        let actionUrl = URL(fileURLWithPath: Bundle.main.path(forResource: "Mars-action", ofType: "mp3")!)
         do {
             let atmosFile = try AVAudioFile(forReading: atmosUrl)
-            let atmosBuffer = AVAudioPCMBuffer(PCMFormat: atmosFile.processingFormat, frameCapacity: AVAudioFrameCount(atmosFile.length))
-            try atmosFile.readIntoBuffer(atmosBuffer)
+            let atmosBuffer = AVAudioPCMBuffer(pcmFormat: atmosFile.processingFormat, frameCapacity: AVAudioFrameCount(atmosFile.length))
+            try atmosFile.read(into: atmosBuffer)
             
             let bassFile = try AVAudioFile(forReading: bassUrl)
-            let bassBuffer = AVAudioPCMBuffer(PCMFormat: bassFile.processingFormat, frameCapacity: AVAudioFrameCount(bassFile.length))
-            try bassFile.readIntoBuffer(bassBuffer)
+            let bassBuffer = AVAudioPCMBuffer(pcmFormat: bassFile.processingFormat, frameCapacity: AVAudioFrameCount(bassFile.length))
+            try bassFile.read(into: bassBuffer)
             
             let actionFile = try AVAudioFile(forReading: actionUrl)
-            let actionBuffer = AVAudioPCMBuffer(PCMFormat: actionFile.processingFormat, frameCapacity: AVAudioFrameCount(actionFile.length))
-            try actionFile.readIntoBuffer(actionBuffer)
+            let actionBuffer = AVAudioPCMBuffer(pcmFormat: actionFile.processingFormat, frameCapacity: AVAudioFrameCount(actionFile.length))
+            try actionFile.read(into: actionBuffer)
             
             
-            engine.attachNode(playerAtmos)
-            engine.attachNode(playerBass)
-            engine.attachNode(playerAction)
+            engine.attach(playerAtmos)
+            engine.attach(playerBass)
+            engine.attach(playerAction)
 
             
             engine.connect(playerAtmos, to: engine.mainMixerNode, format: atmosBuffer.format)
             engine.connect(playerBass, to: engine.mainMixerNode, format: bassBuffer.format)
             engine.connect(playerAction, to: engine.mainMixerNode, format: actionBuffer.format)
             // Schedule playerAtmos and playerBass to play the buffer on a loop
-            playerAtmos.scheduleBuffer(atmosBuffer, atTime: nil, options: AVAudioPlayerNodeBufferOptions.Loops, completionHandler: nil)
-            playerBass.scheduleBuffer(bassBuffer, atTime: nil, options: AVAudioPlayerNodeBufferOptions.Loops, completionHandler: nil)
-            playerAction.scheduleBuffer(actionBuffer, atTime: nil, options: AVAudioPlayerNodeBufferOptions.Loops, completionHandler: nil)
+            playerAtmos.scheduleBuffer(atmosBuffer, at: nil, options: AVAudioPlayerNodeBufferOptions.loops, completionHandler: nil)
+            playerBass.scheduleBuffer(bassBuffer, at: nil, options: AVAudioPlayerNodeBufferOptions.loops, completionHandler: nil)
+            playerAction.scheduleBuffer(actionBuffer, at: nil, options: AVAudioPlayerNodeBufferOptions.loops, completionHandler: nil)
 
             // Start the audio engine
             engine.prepare()
@@ -177,14 +177,14 @@ class AsteroidsSoundService: NSObject {
         explosion!.play()
     }
     
-    func processSound(withText: String) {
+    func processSound(_ withText: String) {
         
-        let date = NSDate()
+        let date = Date()
         print("Got deserialisable report at \(date.timeIntervalSince1970)")
         var json : Payload!
         
         do {
-            json = try NSJSONSerialization.JSONObjectWithData(withText.dataUsingEncoding(NSUTF8StringEncoding)!, options: NSJSONReadingOptions()) as? Payload
+            json = try JSONSerialization.jsonObject(with: withText.data(using: String.Encoding.utf8)!, options: JSONSerialization.ReadingOptions()) as? Payload
         } catch {
             print(error)
             return
@@ -203,13 +203,13 @@ class AsteroidsSoundService: NSObject {
         print("I see \(bullets.count) bullets and \(explosions.count) explosions");
         
         for bullet in bullets {
-            dispatch_async(dispatchQueueBulletNoises) {
+            dispatchQueueBulletNoises.async {
                  self.makeBulletNoise(bullet)
             }
         }
         
         for explosion in explosions {
-            dispatch_async(dispatchQueueExplosionNoises) {
+            dispatchQueueExplosionNoises.async {
                 self.makeExplosionNoise(explosion)
             }
             
@@ -219,7 +219,7 @@ class AsteroidsSoundService: NSObject {
 
     }
     
-    func makeBulletNoise(bulletInfo : [Int]) {
+    func makeBulletNoise(_ bulletInfo : [Int]) {
         guard(seenBullets[bulletInfo[0]] == nil) else {
             print("I've already seen bullet \(bulletInfo[0]), not making a noise")
             return
@@ -230,7 +230,7 @@ class AsteroidsSoundService: NSObject {
         bullet.play()
     }
     
-    func makeExplosionNoise(explosionInfo : [Int]) {
+    func makeExplosionNoise(_ explosionInfo : [Int]) {
         let explosion = Explosion(atX: explosionInfo[0], atY: explosionInfo[1])
         seenExplosions.append(explosion)
         explosion.play()

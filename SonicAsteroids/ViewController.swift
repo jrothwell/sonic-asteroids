@@ -21,35 +21,35 @@ class ViewController: NSViewController {
         addressField.stringValue = "ws://ec2-52-28-1-127.eu-central-1.compute.amazonaws.com/sound" // sensible default
     }
     
-    @IBAction func browseForBackgroundMusic(sender: AnyObject) {
+    @IBAction func browseForBackgroundMusic(_ sender: AnyObject) {
         let filePicker = NSOpenPanel()
         filePicker.runModal()
         
-        let path = filePicker.URL?.path
+        let path = filePicker.url?.path
         
         if let pathDefinitely = path {
             backgroundMusicField.stringValue = pathDefinitely
         }
     }
     
-    @IBAction func beginListening(sender: AnyObject) {
+    @IBAction func beginListening(_ sender: AnyObject) {
         listening = !listening
         if listening {
-            AsteroidsGameService.INSTANCE.connect(NSURL(string: self.addressField.stringValue)!,
+            AsteroidsGameService.INSTANCE.connect(URL(string: self.addressField.stringValue)!,
                                                   callback: updateGameState)
-            self.addressField.editable = false
+            self.addressField.isEditable = false
             self.listenButton.title = "Stop Listening"
             AsteroidsSoundService.INSTANCE.start(backgroundMusicField.stringValue)
         } else {
             AsteroidsSoundService.INSTANCE.stop()
             AsteroidsGameService.INSTANCE.disconnect()
-            self.addressField.editable = true
+            self.addressField.isEditable = true
             self.listenButton.title = "Listen"
             
         }
     }
     
-    func updateGameState(state: String) {
+    func updateGameState(_ state: String) {
         gameStateField.stringValue = state
     }
     
@@ -59,7 +59,7 @@ class ViewController: NSViewController {
         // Do any additional setup after loading the view.
     }
 
-    override var representedObject: AnyObject? {
+    override var representedObject: Any? {
         didSet {
         // Update the view, if already loaded.
         }

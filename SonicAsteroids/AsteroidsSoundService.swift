@@ -179,8 +179,8 @@ class AsteroidsSoundService: NSObject {
     
     func processSound(_ withText: String) {
         
-        let date = Date()
-        print("Got deserialisable report at \(date.timeIntervalSince1970)")
+//        let date = Date()
+//        print("Got deserialisable report at \(date.timeIntervalSince1970)")
         var json : Payload!
         
         do {
@@ -195,12 +195,14 @@ class AsteroidsSoundService: NSObject {
             return
         }
         
-        guard let explosions = json["x"] as? [[Int]] else {
+        guard let explosions = json["x"] as? [[Float]] else {
             print("Couldn't deserialise explosions")
             return
         }
 
-        print("I see \(bullets.count) bullets and \(explosions.count) explosions");
+        if ((bullets.count > 0) || (explosions.count > 0)) {
+            print("I see \(bullets.count) bullets and \(explosions.count) explosions");
+        }
         
         for bullet in bullets {
             dispatchQueueBulletNoises.async {
@@ -220,17 +222,17 @@ class AsteroidsSoundService: NSObject {
     }
     
     func makeBulletNoise(_ bulletInfo : [Int]) {
-        guard(seenBullets[bulletInfo[0]] == nil) else {
+        guard(seenBullets[Int(bulletInfo[0])] == nil) else {
             print("I've already seen bullet \(bulletInfo[0]), not making a noise")
             return
         }
         let bullet = Bullet(atX: bulletInfo[1], atY: bulletInfo[2])
-        seenBullets[bulletInfo[0]] = bullet
+        seenBullets[Int(bulletInfo[0])] = bullet
         print("I'm making a noise for bullet \(bulletInfo[0])")
         bullet.play()
     }
     
-    func makeExplosionNoise(_ explosionInfo : [Int]) {
+    func makeExplosionNoise(_ explosionInfo : [Float]) {
         let explosion = Explosion(atX: explosionInfo[0], atY: explosionInfo[1])
         seenExplosions.append(explosion)
         explosion.play()
@@ -238,11 +240,11 @@ class AsteroidsSoundService: NSObject {
 }
 
 struct Explosion {
-    let x : Int
-    let y : Int
+    let x : Float
+    let y : Float
     let player : AVAudioPlayer?
     
-    init(atX: Int, atY: Int) {
+    init(atX: Float, atY: Float) {
         x = atX
         y = atY
         player = AsteroidsSoundService.INSTANCE.getRandomAudioPlayer(AsteroidsSoundService.INSTANCE.explosionAudioFiles)

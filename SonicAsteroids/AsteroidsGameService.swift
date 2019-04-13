@@ -27,7 +27,7 @@ class AsteroidsGameService: NSObject, WebSocketDelegate {
             DispatchQueue.main.async {
                 callbackDefinitely(text)
             }
-            DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.high).async {
+            DispatchQueue.global(qos: DispatchQoS.userInteractive.qosClass).async {
                 AsteroidsSoundService.INSTANCE.processSound(text)
             }
         };

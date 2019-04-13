@@ -40,6 +40,7 @@
 		8BAE74D61D2BE4C80039FEE5 /* Gloss.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BAE74D51D2BE4C80039FEE5 /* Gloss.framework */; };
 		8BAE74D71D2BE4C80039FEE5 /* Gloss.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8BAE74D51D2BE4C80039FEE5 /* Gloss.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8BAE74D91D2BE4D20039FEE5 /* Gloss.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8BAE74D81D2BE4D20039FEE5 /* Gloss.framework.dSYM */; };
+		F203F543226249B5009001B7 /* Gloss.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BAE74D51D2BE4C80039FEE5 /* Gloss.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -139,6 +140,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F203F543226249B5009001B7 /* Gloss.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -582,6 +584,10 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = SonicAsteroidsTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -600,6 +606,10 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = SonicAsteroidsTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

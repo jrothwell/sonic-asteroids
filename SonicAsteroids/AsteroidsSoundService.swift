@@ -9,9 +9,9 @@
 import Cocoa
 import AVFoundation
 import SpriteKit
-//import Gloss
+import Gloss
 
-typealias Payload = [String: AnyObject]
+typealias Payload = [NSDictionary]
 
 class AsteroidsSoundService: NSObject {
     static let INSTANCE = AsteroidsSoundService()
@@ -30,9 +30,6 @@ class AsteroidsSoundService: NSObject {
     
     var playing : Bool = false
     
-    var seenBullets : [Int: Bullet]
-    var seenExplosions : [Explosion]
-    
     var explosionAudioFiles : [Data]
     var bulletAudioFiles : [Data]
     
@@ -45,12 +42,12 @@ class AsteroidsSoundService: NSObject {
         playerBass = AVAudioPlayerNode()
         playerAction = AVAudioPlayerNode()
         playerAtmos.volume = 0.2
-        playerBass.volume = 0.0
-        playerAction.volume = 0.2
+        playerBass.volume = 0.0 // TODO fade in
+        playerAction.volume = 0.1
         
         
-        bulletData = try? Data(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "Velocity Zapper_bip1", ofType: "mp3")!))
-        explosionData = try? Data(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "5", ofType: "mp3")!))
+        bulletData = try? Data(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "Velocity Zapper_bip11", ofType: "mp3")!))
+        explosionData = try? Data(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "11", ofType: "mp3")!))
         
         explosionAudioFiles = [Data]()
         for file : String in ["1", "3", "5", "7", "9", "11", "12"] {
@@ -72,12 +69,8 @@ class AsteroidsSoundService: NSObject {
         bullet = AsteroidsSoundService.setupAudioPlayerWithFile("Velocity Zapper_bip1", type: "mp3")
         explosion = AsteroidsSoundService.setupAudioPlayerWithFile("5", type: "mp3")
         
-        seenBullets = [Int: Bullet]()
-        seenExplosions = [Explosion]()
-        
         dispatchQueueBulletNoises = DispatchQueue(label: "com.zuhlke.asteroids", attributes: [])
         dispatchQueueExplosionNoises = DispatchQueue(label: "com.zuhlke.asteroids", attributes: [])
-
         
     }
     
@@ -107,7 +100,7 @@ class AsteroidsSoundService: NSObject {
         
         return player
     }
-
+    
     
     func start(_ path: String) {
         guard !playing else {
@@ -135,7 +128,7 @@ class AsteroidsSoundService: NSObject {
             engine.attach(playerAtmos)
             engine.attach(playerBass)
             engine.attach(playerAction)
-
+            
             
             engine.connect(playerAtmos, to: engine.mainMixerNode, format: atmosBuffer!.format)
             engine.connect(playerBass, to: engine.mainMixerNode, format: bassBuffer!.format)
@@ -144,7 +137,7 @@ class AsteroidsSoundService: NSObject {
             playerAtmos.scheduleBuffer(atmosBuffer!, at: nil, options: AVAudioPlayerNodeBufferOptions.loops, completionHandler: nil)
             playerBass.scheduleBuffer(bassBuffer!, at: nil, options: AVAudioPlayerNodeBufferOptions.loops, completionHandler: nil)
             playerAction.scheduleBuffer(actionBuffer!, at: nil, options: AVAudioPlayerNodeBufferOptions.loops, completionHandler: nil)
-
+            
             // Start the audio engine
             engine.prepare()
             try engine.start()
@@ -179,8 +172,6 @@ class AsteroidsSoundService: NSObject {
     
     func processSound(_ withText: String) {
         
-//        let date = Date()
-//        print("Got deserialisable report at \(date.timeIntervalSince1970)")
         var json : Payload!
         
         do {
@@ -190,63 +181,49 @@ class AsteroidsSoundService: NSObject {
             return
         }
         
-        guard let bullets = json["b"] as? [[Int]] else {
-            print("Couldn't deserialise bullets")
+        guard let soundEvents = [SoundEvent].from(jsonArray: json as! [JSON]) else {
+            print("Bad sound stream")
             return
         }
         
-        guard let explosions = json["x"] as? [[Float]] else {
-            print("Couldn't deserialise explosions")
-            return
-        }
-
-        if ((bullets.count > 0) || (explosions.count > 0)) {
-            print("I see \(bullets.count) bullets and \(explosions.count) explosions");
-        }
-        
-        for bullet in bullets {
-            dispatchQueueBulletNoises.async {
-                 self.makeBulletNoise(bullet)
-            }
-        }
-        
-        for explosion in explosions {
-            dispatchQueueExplosionNoises.async {
-                self.makeExplosionNoise(explosion)
+        for sound in soundEvents {
+            switch sound.sound {
+            case .shoot?: dispatchQueueBulletNoises.async {
+                self.makeBulletNoise(soundEvent: sound)
+                }
+            case .explosion?: dispatchQueueBulletNoises.async {
+                self.makeExplosionNoise(soundEvent: sound)
+                }
+            case .none:
+                break;
             }
             
         }
         
-        playerBass.volume = min(Float(bullets.count) / 40.0, Float(0.3))
-
+        // TODO Volume is a moving average of activity
+        //        playerBass.volume = min(Float(bullets.count) / 40.0, Float(0.3))
+        
     }
     
-    func makeBulletNoise(_ bulletInfo : [Int]) {
-        guard(seenBullets[Int(bulletInfo[0])] == nil) else {
-            print("I've already seen bullet \(bulletInfo[0]), not making a noise")
-            return
-        }
-        let bullet = Bullet(atX: bulletInfo[1], atY: bulletInfo[2])
-        seenBullets[Int(bulletInfo[0])] = bullet
-        print("I'm making a noise for bullet \(bulletInfo[0])")
-        bullet.play()
+    func makeBulletNoise(soundEvent: SoundEvent) {
+        bullet?.play();
+        //        let bullet = Bullet(atPpan: soundEvent.pan ?? 0.0)
+        //        bullet.play()
     }
     
-    func makeExplosionNoise(_ explosionInfo : [Float]) {
-        let explosion = Explosion(atX: explosionInfo[0], atY: explosionInfo[1])
-        seenExplosions.append(explosion)
-        explosion.play()
+    func makeExplosionNoise(soundEvent: SoundEvent) {
+        explosion?.play();
+        //            Explosion(atPan: soundEvent.pan ?? 0.0).play()
     }
+    
 }
 
 struct Explosion {
-    let x : Float
-    let y : Float
+    let pan: Float
     let player : AVAudioPlayer?
     
-    init(atX: Float, atY: Float) {
-        x = atX
-        y = atY
+    init(atPan: Float) {
+        pan = atPan
         player = AsteroidsSoundService.INSTANCE.getRandomAudioPlayer(AsteroidsSoundService.INSTANCE.explosionAudioFiles)
         player!.volume = 0.9
         player!.prepareToPlay()
@@ -254,17 +231,16 @@ struct Explosion {
     
     func play() {
         player!.play()
+        print("FIRED")
     }
 }
 
 struct Bullet {
-    let x : Int?
-    let y : Int?
+    let pan: Float
     let player : AVAudioPlayer?
     
-    init(atX: Int, atY: Int) {
-        x = atX
-        y = atY
+    init(atPpan: Float) {
+        pan = atPpan
         player = AsteroidsSoundService.INSTANCE.getRandomAudioPlayer(AsteroidsSoundService.INSTANCE.bulletAudioFiles)
         player!.volume = 0.6
         player!.prepareToPlay()
@@ -272,5 +248,22 @@ struct Bullet {
     func play() {
         player!.play()
     }
+    
+}
 
+enum SoundType: String {
+    case shoot = "f";
+    case explosion = "x";
+}
+
+struct SoundEvent : JSONDecodable {
+    let gameTime: Int?
+    let pan: Float?
+    let sound: SoundType?
+    
+    init?(json: JSON) {
+        self.gameTime = "t" <~~ json;
+        self.pan = "pan" <~~ json;
+        self.sound = "snd" <~~ json;
+    }
 }

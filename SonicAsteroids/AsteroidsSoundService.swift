@@ -9,7 +9,7 @@
 import Cocoa
 import AVFoundation
 import SpriteKit
-import Gloss
+//import Gloss
 
 typealias Payload = [String: AnyObject]
 

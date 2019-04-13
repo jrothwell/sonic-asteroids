@@ -121,15 +121,15 @@ class AsteroidsSoundService: NSObject {
         do {
             let atmosFile = try AVAudioFile(forReading: atmosUrl)
             let atmosBuffer = AVAudioPCMBuffer(pcmFormat: atmosFile.processingFormat, frameCapacity: AVAudioFrameCount(atmosFile.length))
-            try atmosFile.read(into: atmosBuffer)
+            try atmosFile.read(into: atmosBuffer!)
             
             let bassFile = try AVAudioFile(forReading: bassUrl)
             let bassBuffer = AVAudioPCMBuffer(pcmFormat: bassFile.processingFormat, frameCapacity: AVAudioFrameCount(bassFile.length))
-            try bassFile.read(into: bassBuffer)
+            try bassFile.read(into: bassBuffer!)
             
             let actionFile = try AVAudioFile(forReading: actionUrl)
             let actionBuffer = AVAudioPCMBuffer(pcmFormat: actionFile.processingFormat, frameCapacity: AVAudioFrameCount(actionFile.length))
-            try actionFile.read(into: actionBuffer)
+            try actionFile.read(into: actionBuffer!)
             
             
             engine.attach(playerAtmos)
@@ -137,13 +137,13 @@ class AsteroidsSoundService: NSObject {
             engine.attach(playerAction)
 
             
-            engine.connect(playerAtmos, to: engine.mainMixerNode, format: atmosBuffer.format)
-            engine.connect(playerBass, to: engine.mainMixerNode, format: bassBuffer.format)
-            engine.connect(playerAction, to: engine.mainMixerNode, format: actionBuffer.format)
+            engine.connect(playerAtmos, to: engine.mainMixerNode, format: atmosBuffer!.format)
+            engine.connect(playerBass, to: engine.mainMixerNode, format: bassBuffer!.format)
+            engine.connect(playerAction, to: engine.mainMixerNode, format: actionBuffer!.format)
             // Schedule playerAtmos and playerBass to play the buffer on a loop
-            playerAtmos.scheduleBuffer(atmosBuffer, at: nil, options: AVAudioPlayerNodeBufferOptions.loops, completionHandler: nil)
-            playerBass.scheduleBuffer(bassBuffer, at: nil, options: AVAudioPlayerNodeBufferOptions.loops, completionHandler: nil)
-            playerAction.scheduleBuffer(actionBuffer, at: nil, options: AVAudioPlayerNodeBufferOptions.loops, completionHandler: nil)
+            playerAtmos.scheduleBuffer(atmosBuffer!, at: nil, options: AVAudioPlayerNodeBufferOptions.loops, completionHandler: nil)
+            playerBass.scheduleBuffer(bassBuffer!, at: nil, options: AVAudioPlayerNodeBufferOptions.loops, completionHandler: nil)
+            playerAction.scheduleBuffer(actionBuffer!, at: nil, options: AVAudioPlayerNodeBufferOptions.loops, completionHandler: nil)
 
             // Start the audio engine
             engine.prepare()

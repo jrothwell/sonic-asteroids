@@ -1,2 +1,5 @@
 Carthage
 Cartfile.resolved 
+
+**/xcshareddata/
+**/xcuserdata/

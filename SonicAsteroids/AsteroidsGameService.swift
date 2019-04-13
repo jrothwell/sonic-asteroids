@@ -10,6 +10,33 @@ import Cocoa
 import Starscream
 
 class AsteroidsGameService: NSObject, WebSocketDelegate {
+    func websocketDidConnect(socket: WebSocketClient) {
+        print("WebSocket connected!");
+    }
+    
+    func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
+        if let errorDefinitely = error {
+            print("WebSocket disconnected with error \(errorDefinitely.localizedDescription)")
+        } else {
+            print("WebSocket disconnected cleanly.")
+        };
+    }
+    
+    func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
+        if let callbackDefinitely = callback {
+            DispatchQueue.main.async {
+                callbackDefinitely(text)
+            }
+            DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.high).async {
+                AsteroidsSoundService.INSTANCE.processSound(text)
+            }
+        };
+    }
+    
+    func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
+        print("got some data: \(data.count)");
+    }
+    
     static let INSTANCE = AsteroidsGameService() // singleton
     var callback : ((String) -> Void)?
     var socket : WebSocket?
@@ -25,33 +52,6 @@ class AsteroidsGameService: NSObject, WebSocketDelegate {
         if let socketDefinitely = socket {
             socketDefinitely.disconnect()
         }
-    }
-    
-    func websocketDidConnect(socket: WebSocket) {
-        print("WebSocket connected!")
-    }
-    
-    func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
-        if let errorDefinitely = error {
-            print("WebSocket disconnected with error \(errorDefinitely.localizedDescription)")
-        } else {
-            print("WebSocket disconnected cleanly.")
-        }
-    }
-    
-    func websocketDidReceiveMessage(socket: WebSocket, text: String) {
-        if let callbackDefinitely = callback {
-            DispatchQueue.main.async {
-                callbackDefinitely(text)
-            }
-            DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.high).async {
-                AsteroidsSoundService.INSTANCE.processSound(text)
-            }
-        }
-    }
-    
-    func websocketDidReceiveData(socket: WebSocket, data: Data) {
-        print("got some data: \(data.count)")
     }
 
 }

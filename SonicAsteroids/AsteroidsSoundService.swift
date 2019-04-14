@@ -22,16 +22,34 @@ class AsteroidsSoundService: NSObject {
     var playerAction: AVAudioPlayerNode!
     
     
-    var bullet: AVAudioPlayer?
-    var explosion: AVAudioPlayer?
+    var shootPlayers:[AVAudioPlayer]
+    var explosionPlayers:[AVAudioPlayer]
     
     var playing : Bool = false
     
-    var explosionAudioFiles : [Data]
-    var bulletAudioFiles : [Data]
-    
     var dispatchQueueBulletNoises : DispatchQueue
     var dispatchQueueExplosionNoises : DispatchQueue
+    
+    var explosion_filenames:[String] = [
+        "12",
+        "5",
+        "7",
+        "3",
+        "9",
+        "1",
+        "11"
+    ];
+    
+    var shoot_filenames:[String] = [
+        "Velocity Zapper_bip13",
+        "Velocity Zapper_bip11",
+        "Velocity Zapper_bip17",
+        "Velocity Zapper_bip9",
+        "Velocity Zapper_bip15",
+        "Velocity Zapper_bip18",
+        "Velocity Zapper_bip5",
+        "Velocity Zapper_bip1"
+    ];
     
     override init() {
         engine = AVAudioEngine()
@@ -43,30 +61,19 @@ class AsteroidsSoundService: NSObject {
         playerAction.volume = 0.1
         
         
-        explosionAudioFiles = [Data]()
-        for file : String in ["1", "3", "5", "7", "9", "11", "12"] {
-            let path = Bundle.main.path(forResource: file, ofType: "mp3")
-            let url = URL(fileURLWithPath: path!)
-            if let data = try? Data(contentsOf: url) {
-                explosionAudioFiles.append(data)
+        shootPlayers = [AVAudioPlayer]()
+        for file : String in shoot_filenames {
+            if let player =  AsteroidsSoundService.setupAudioPlayerWithFile(file as NSString, type: "mp3") {
+                shootPlayers.append(player);
             }
         }
-        bulletAudioFiles = [Data]()
-        for file : String in ["Velocity Zapper_bip1", "Velocity Zapper_bip5", "Velocity Zapper_bip7", "Velocity Zapper_bip9", "Velocity Zapper_bip11", "Velocity Zapper_bip13", "Velocity Zapper_bip15", "Velocity Zapper_bip17", "Velocity Zapper_bip18"] {
-            let path = Bundle.main.path(forResource: file, ofType: "mp3")
-            let url = URL(fileURLWithPath: path!)
-            if let data = try? Data(contentsOf: url) {
-                bulletAudioFiles.append(data)
+        explosionPlayers = [AVAudioPlayer]()
+        for file : String in explosion_filenames {
+            if let player =  AsteroidsSoundService.setupAudioPlayerWithFile(file as NSString, type: "mp3") {
+                explosionPlayers.append(player);
             }
         }
         
-        bullet = AsteroidsSoundService.setupAudioPlayerWithFile("Velocity Zapper_bip17", type: "mp3")
-        explosion = AsteroidsSoundService.setupAudioPlayerWithFile("11", type: "mp3")
-        
-        //# TODO remove
-        bullet?.pan = adjustPan(pan: -0.8)
-        explosion?.pan = adjustPan(pan: 0.8)
-
         
         dispatchQueueBulletNoises = DispatchQueue(label: "com.zuhlke.asteroids", attributes: [])
         dispatchQueueExplosionNoises = DispatchQueue(label: "com.zuhlke.asteroids", attributes: [])
@@ -161,14 +168,6 @@ class AsteroidsSoundService: NSObject {
         playing = false
     }
     
-    func playBulletSound() {
-        bullet!.play()
-    }
-    
-    func playExplosionSound() {
-        explosion!.play()
-    }
-    
     func processSound(_ withText: String) {
         
         var json : Payload!
@@ -196,23 +195,18 @@ class AsteroidsSoundService: NSObject {
             case .none:
                 break;
             }
-            
         }
-        
         // TODO Volume is a moving average of activity
         //        playerBass.volume = min(Float(bullets.count) / 40.0, Float(0.3))
-        
     }
     
     func makeBulletNoise(soundEvent: SoundEvent) {
-        bullet?.play();
-        //        let bullet = Bullet(atPpan: soundEvent.pan ?? 0.0)
-        //        bullet.play()
+        let bullet = Bullet(pan: soundEvent.pan ?? 0.0)
+        bullet.play()
     }
     
     func makeExplosionNoise(soundEvent: SoundEvent) {
-        explosion?.play();
-        //            Explosion(atPan: soundEvent.pan ?? 0.0).play()
+        Explosion(pan: soundEvent.pan ?? 0.0).play()
     }
     
 }
@@ -220,8 +214,8 @@ class AsteroidsSoundService: NSObject {
 struct Explosion {
     let player : AVAudioPlayer?
     
-    init(pan: Float) {
-        player = AsteroidsSoundService.INSTANCE.getRandomAudioPlayer(AsteroidsSoundService.INSTANCE.explosionAudioFiles)
+    init(pan: Double) {
+        player = AsteroidsSoundService.INSTANCE.explosionPlayers.randomElement();
         player!.pan = adjustPan(pan: pan)
         player!.volume = 0.9
         player!.prepareToPlay()
@@ -229,15 +223,14 @@ struct Explosion {
     
     func play() {
         player!.play()
-        print("FIRED")
     }
 }
 
 struct Bullet {
     let player : AVAudioPlayer?
     
-    init(pan: Float) {
-        player = AsteroidsSoundService.INSTANCE.getRandomAudioPlayer(AsteroidsSoundService.INSTANCE.bulletAudioFiles)
+    init(pan: Double) {
+        player = AsteroidsSoundService.INSTANCE.shootPlayers.randomElement();
         player!.pan = adjustPan(pan: pan)
         player!.volume = 0.6
         player!.prepareToPlay()
@@ -266,19 +259,19 @@ struct SoundEvent : JSONDecodable {
 }
 
 /*
-  Apply the quadratic function y=x^5
-  This keeps the pan inside the range -1..1
-  But applies a bathtub curve to keep the sounds
-  mostly in the centre of the soundscape.
+ Apply the quadratic function y=x^5
+ This keeps the pan inside the range -1..1
+ But applies a bathtub curve to keep the sounds
+ mostly in the centre of the soundscape.
  
-  https://www.wolframalpha.com/input/?i=y%3Dx%5E5,+y%3D1,+y%3D-1
-*/
-func adjustPan(pan: Float) -> Float {
+ https://www.wolframalpha.com/input/?i=y%3Dx%5E5,+y%3D1,+y%3D-1
+ */
+func adjustPan(pan: Double) -> Float {
     if (pan < -1.0) {
         return 0.0;
     } else if (pan > 1.0) {
         return 0.0;
     } else {
-        return pan * pan * pan * pan * pan;
+        return Float(pan * pan * pan * pan * pan);
     }
 }

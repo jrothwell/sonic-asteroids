@@ -174,7 +174,6 @@ class AsteroidsSoundService: NSObject {
         let playersNotPlaying = candidates.filter({!$0.isPlaying});
         if (playersNotPlaying.isEmpty) {
             let p = candidates.randomElement()
-            p?.stop()
             return p;
         } else {
             return playersNotPlaying.randomElement();
@@ -198,9 +197,7 @@ class AsteroidsSoundService: NSObject {
         for sound in soundEvents {
             switch sound.sound {
             case .shoot?: self.makeBulletNoise(soundEvent: sound)
-            case .explosion?: dispatchQueueBulletNoises.async {
-                self.makeExplosionNoise(soundEvent: sound)
-                }
+            case .explosion?: self.makeExplosionNoise(soundEvent: sound)
             case .none:
                 break;
             }
@@ -218,7 +215,11 @@ class AsteroidsSoundService: NSObject {
     }
     
     func makeExplosionNoise(soundEvent: SoundEvent) {
-//        Explosion(pan: soundEvent.pan ?? 0.0).play()
+        dispatchQueueExplosionNoises.async {
+            let player = self.availablePlayer(self.explosionPlayers)
+            let explosion = Explosion(pan: soundEvent.pan ?? 0.0, avPlayer: player)
+            explosion.play()
+        }
     }
     
 }
@@ -226,10 +227,10 @@ class AsteroidsSoundService: NSObject {
 struct Explosion {
     let player : AVAudioPlayer?
     
-    init(pan: Double) {
-        player = AsteroidsSoundService.INSTANCE.explosionPlayers.randomElement();
+    init(pan: Double, avPlayer: AVAudioPlayer?) {
+        player = avPlayer;
         player!.pan = adjustPan(pan: pan)
-        player!.volume = 0.9
+        player!.volume = 0.8
         player!.prepareToPlay()
     }
     
@@ -244,7 +245,7 @@ struct Bullet {
     init(pan: Double, avPlayer: AVAudioPlayer?) {
         player = avPlayer;
         player!.pan = adjustPan(pan: pan)
-        player!.volume = 0.6
+        player!.volume = 0.3
         player!.prepareToPlay()
     }
     func play() {

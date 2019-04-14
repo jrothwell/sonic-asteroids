@@ -168,15 +168,16 @@ class AsteroidsSoundService: NSObject {
         playing = false
     }
     
-    /* Return an idle player.
-       If all are busy, choose one to be stopped! */
+    /* Return an idle sound player. If all are busy, choose one to be restarted! */
     func availablePlayer(_ candidates: [AVAudioPlayer]) -> AVAudioPlayer? {
-        let playersNotPlaying = candidates.filter({!$0.isPlaying});
-        if (playersNotPlaying.isEmpty) {
+        let playersIdle = candidates.filter({!$0.isPlaying});
+        if (playersIdle.isEmpty) {
             let p = candidates.randomElement()
+            p?.stop()
+            p?.currentTime = 0
             return p;
         } else {
-            return playersNotPlaying.randomElement();
+            return playersIdle.randomElement();
         }
     }
     

@@ -168,10 +168,21 @@ class AsteroidsSoundService: NSObject {
         playing = false
     }
     
+    /* Return an idle player.
+       If all are busy, choose one to be stopped! */
+    func availablePlayer(_ candidates: [AVAudioPlayer]) -> AVAudioPlayer? {
+        let playersNotPlaying = candidates.filter({!$0.isPlaying});
+        if (playersNotPlaying.isEmpty) {
+            let p = candidates.randomElement()
+            p?.stop()
+            return p;
+        } else {
+            return playersNotPlaying.randomElement();
+        }
+    }
+    
     func processSound(_ withText: String) {
-        
         var json : Payload!
-        
         do {
             json = try JSONSerialization.jsonObject(with: withText.data(using: String.Encoding.utf8)!, options: JSONSerialization.ReadingOptions()) as? Payload
         } catch {
@@ -186,9 +197,7 @@ class AsteroidsSoundService: NSObject {
         
         for sound in soundEvents {
             switch sound.sound {
-            case .shoot?: dispatchQueueBulletNoises.async {
-                self.makeBulletNoise(soundEvent: sound)
-                }
+            case .shoot?: self.makeBulletNoise(soundEvent: sound)
             case .explosion?: dispatchQueueBulletNoises.async {
                 self.makeExplosionNoise(soundEvent: sound)
                 }
@@ -201,12 +210,15 @@ class AsteroidsSoundService: NSObject {
     }
     
     func makeBulletNoise(soundEvent: SoundEvent) {
-        let bullet = Bullet(pan: soundEvent.pan ?? 0.0)
-        bullet.play()
+        dispatchQueueBulletNoises.async {
+            let player = self.availablePlayer(self.shootPlayers)
+            let bullet = Bullet(pan: soundEvent.pan ?? 0.0, avPlayer: player)
+            bullet.play()
+        }
     }
     
     func makeExplosionNoise(soundEvent: SoundEvent) {
-        Explosion(pan: soundEvent.pan ?? 0.0).play()
+//        Explosion(pan: soundEvent.pan ?? 0.0).play()
     }
     
 }
@@ -229,8 +241,8 @@ struct Explosion {
 struct Bullet {
     let player : AVAudioPlayer?
     
-    init(pan: Double) {
-        player = AsteroidsSoundService.INSTANCE.shootPlayers.randomElement();
+    init(pan: Double, avPlayer: AVAudioPlayer?) {
+        player = avPlayer;
         player!.pan = adjustPan(pan: pan)
         player!.volume = 0.6
         player!.prepareToPlay()

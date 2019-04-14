@@ -25,9 +25,6 @@ class AsteroidsSoundService: NSObject {
     var bullet: AVAudioPlayer?
     var explosion: AVAudioPlayer?
     
-    var bulletData: Data?
-    var explosionData: Data?
-    
     var playing : Bool = false
     
     var explosionAudioFiles : [Data]
@@ -45,9 +42,6 @@ class AsteroidsSoundService: NSObject {
         playerBass.volume = 0.0 // TODO fade in
         playerAction.volume = 0.1
         
-        
-        bulletData = try? Data(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "Velocity Zapper_bip11", ofType: "mp3")!))
-        explosionData = try? Data(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "11", ofType: "mp3")!))
         
         explosionAudioFiles = [Data]()
         for file : String in ["1", "3", "5", "7", "9", "11", "12"] {
@@ -68,6 +62,11 @@ class AsteroidsSoundService: NSObject {
         
         bullet = AsteroidsSoundService.setupAudioPlayerWithFile("Velocity Zapper_bip1", type: "mp3")
         explosion = AsteroidsSoundService.setupAudioPlayerWithFile("5", type: "mp3")
+        
+        //# TODO remove
+        bullet?.pan = adjustPan(pan: -0.8)
+        explosion?.pan = adjustPan(pan: 0.8)
+
         
         dispatchQueueBulletNoises = DispatchQueue(label: "com.zuhlke.asteroids", attributes: [])
         dispatchQueueExplosionNoises = DispatchQueue(label: "com.zuhlke.asteroids", attributes: [])
@@ -219,12 +218,11 @@ class AsteroidsSoundService: NSObject {
 }
 
 struct Explosion {
-    let pan: Float
     let player : AVAudioPlayer?
     
-    init(atPan: Float) {
-        pan = atPan
+    init(pan: Float) {
         player = AsteroidsSoundService.INSTANCE.getRandomAudioPlayer(AsteroidsSoundService.INSTANCE.explosionAudioFiles)
+        player!.pan = adjustPan(pan: pan)
         player!.volume = 0.9
         player!.prepareToPlay()
     }
@@ -236,12 +234,11 @@ struct Explosion {
 }
 
 struct Bullet {
-    let pan: Float
     let player : AVAudioPlayer?
     
-    init(atPpan: Float) {
-        pan = atPpan
+    init(pan: Float) {
         player = AsteroidsSoundService.INSTANCE.getRandomAudioPlayer(AsteroidsSoundService.INSTANCE.bulletAudioFiles)
+        player!.pan = adjustPan(pan: pan)
         player!.volume = 0.6
         player!.prepareToPlay()
     }
@@ -258,12 +255,30 @@ enum SoundType: String {
 
 struct SoundEvent : JSONDecodable {
     let gameTime: Int?
-    let pan: Float?
+    let pan: Double?
     let sound: SoundType?
     
     init?(json: JSON) {
         self.gameTime = "t" <~~ json;
         self.pan = "pan" <~~ json;
         self.sound = "snd" <~~ json;
+    }
+}
+
+/*
+  Apply the quadratic function y=x^5
+  This keeps the pan inside the range -1..1
+  But applies a bathtub curve to keep the sounds
+  mostly in the centre of the soundscape.
+ 
+  https://www.wolframalpha.com/input/?i=y%3Dx%5E5,+y%3D1,+y%3D-1
+*/
+func adjustPan(pan: Float) -> Float {
+    if (pan < -1.0) {
+        return 0.0;
+    } else if (pan > 1.0) {
+        return 0.0;
+    } else {
+        return pan * pan * pan * pan * pan;
     }
 }

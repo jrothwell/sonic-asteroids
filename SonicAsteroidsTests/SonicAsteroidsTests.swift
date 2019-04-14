@@ -13,24 +13,38 @@ class SonicAsteroidsTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
     }
     
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    func testCenterPanIsZero() {
+        XCTAssertEqual(0.0, SonicAsteroids.adjustPan(pan: 0.0))
     }
+
+    func testFarLeftPanIsNegativeOne() {
+        XCTAssertEqual(-1.0, SonicAsteroids.adjustPan(pan: -1.0))
+    }
+
+    func testFarRightPanIsPositiveOne() {
+        XCTAssertEqual(1.0, SonicAsteroids.adjustPan(pan: 1.0))
+    }
+
+    func testOufOfRangePanIsIgnored() {
+        XCTAssertEqual(0.0, SonicAsteroids.adjustPan(pan: -2.0))
+        XCTAssertEqual(0.0, SonicAsteroids.adjustPan(pan: 14.0))
+    }
+
+    func testBathtubCurve() {
+        XCTAssertLessThan(SonicAsteroids.adjustPan(pan: 0.5), 0.5)
+        XCTAssertGreaterThan(SonicAsteroids.adjustPan(pan: -0.5), -0.5)
+    }
+
     
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
+//    func testPerformanceExample() {
+//        self.measure {
+//        }
+//    }
     
 }

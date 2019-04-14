@@ -60,8 +60,8 @@ class AsteroidsSoundService: NSObject {
             }
         }
         
-        bullet = AsteroidsSoundService.setupAudioPlayerWithFile("Velocity Zapper_bip1", type: "mp3")
-        explosion = AsteroidsSoundService.setupAudioPlayerWithFile("5", type: "mp3")
+        bullet = AsteroidsSoundService.setupAudioPlayerWithFile("Velocity Zapper_bip17", type: "mp3")
+        explosion = AsteroidsSoundService.setupAudioPlayerWithFile("11", type: "mp3")
         
         //# TODO remove
         bullet?.pan = adjustPan(pan: -0.8)

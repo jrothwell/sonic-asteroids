@@ -21,7 +21,6 @@ class AsteroidsSoundService: NSObject {
     var playerBass: AVAudioPlayerNode!
     var playerAction: AVAudioPlayerNode!
     
-    
     var shootPlayers:[AVAudioPlayer]
     var explosionPlayers:[AVAudioPlayer]
     
@@ -60,25 +59,23 @@ class AsteroidsSoundService: NSObject {
         playerBass.volume = 0.0 // TODO fade in
         playerAction.volume = 0.1
         
-        
-        shootPlayers = [AVAudioPlayer]()
-        for file : String in shoot_filenames {
-            if let player =  AsteroidsSoundService.setupAudioPlayerWithFile(file as NSString, type: "mp3") {
-                shootPlayers.append(player);
-            }
-        }
-        explosionPlayers = [AVAudioPlayer]()
-        for file : String in explosion_filenames {
-            if let player =  AsteroidsSoundService.setupAudioPlayerWithFile(file as NSString, type: "mp3") {
-                explosionPlayers.append(player);
-            }
-        }
-        
+        shootPlayers = AsteroidsSoundService.loadSamplesToPlayers(shoot_filenames)
+        explosionPlayers = AsteroidsSoundService.loadSamplesToPlayers(explosion_filenames)
         
         dispatchQueueBulletNoises = DispatchQueue(label: "com.zuhlke.asteroids", attributes: [])
         dispatchQueueExplosionNoises = DispatchQueue(label: "com.zuhlke.asteroids", attributes: [])
-        
     }
+    
+    static func loadSamplesToPlayers(_ filenames: [String]) -> [AVAudioPlayer] {
+        var players = [AVAudioPlayer]()
+        for file : String in filenames {
+            if let player =  AsteroidsSoundService.setupAudioPlayerWithFile(file as NSString, type: "mp3"){
+                players.append(player);
+            }
+        }
+        return players;
+    }
+
     
     static func setupAudioPlayerWithFile(_ file:NSString, type:NSString) -> AVAudioPlayer?  {
         let path = Bundle.main.path(forResource: file as String, ofType: type as String)
@@ -90,6 +87,7 @@ class AsteroidsSoundService: NSObject {
             try audioPlayer = AVAudioPlayer(contentsOf: url)
         } catch {
             print("Player not available")
+            // TODO fail if we cannot play sounds...
         }
         
         return audioPlayer
@@ -166,10 +164,12 @@ class AsteroidsSoundService: NSObject {
         }
     }
     
+    // Filter players for those not playing
     func idle(_ players: [AVAudioPlayer]) -> [AVAudioPlayer] {
         return players.filter({!$0.isPlaying})
     }
     
+    // Stop an audio player and reset playback to beginning
     func stop(_ player: AVAudioPlayer?) -> AVAudioPlayer? {
         player?.stop()
         player?.currentTime = 0
@@ -268,7 +268,7 @@ struct SoundEvent : JSONDecodable {
 /*
  Apply the quadratic function y=x³
  This keeps the pan inside the range -1..1
- But applies a bathtub curve to keep the sounds
+ yet applies a bathtub curve to keep the sounds
  mostly in the centre of the soundscape.
  
  https://www.wolframalpha.com/input/?i=y%3Dx%5E3,+y%3D1,+y%3D-1

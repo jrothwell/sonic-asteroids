@@ -47,4 +47,26 @@ class SonicAsteroidsTests: XCTestCase {
 //        }
 //    }
     
+    func testEmptyCircularCountingList() {
+        let l = CircularCountingList(1)
+        XCTAssertEqual(0, l.sum())
+    }
+
+    func testFullCircularCountingList() {
+        let l = CircularCountingList(3)
+        l.add(1)
+        l.add(2)
+        l.add(3)
+        XCTAssertEqual(6, l.sum())
+    }
+
+    func testWrapCircularCountingList() {
+        let l = CircularCountingList(3)
+        l.add(1)
+        l.add(2)
+        l.add(3)
+        l.add(4)
+        XCTAssertEqual(9, l.sum())
+    }
+
 }

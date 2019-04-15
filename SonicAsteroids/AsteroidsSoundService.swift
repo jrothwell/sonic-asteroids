@@ -13,9 +13,12 @@ import Gloss
 
 typealias Payload = [NSDictionary]
 
+let fps = 12
+
 class AsteroidsSoundService: NSObject {
     static let INSTANCE = AsteroidsSoundService()
     
+    var playing : Bool = false
     var engine : AVAudioEngine
     var playerAtmos: AVAudioPlayerNode!
     var playerBass: AVAudioPlayerNode!
@@ -24,9 +27,11 @@ class AsteroidsSoundService: NSObject {
     var shootPlayers:[AVAudioPlayer]
     var explosionPlayers:[AVAudioPlayer]
     
-    var playing : Bool = false
-    
     var dispatchQueueNoises : DispatchQueue
+    
+    var eventCount : CircularCountingList?
+    var volumeTimer : Timer?
+    var maxEventCount = 0;
     
     var explosion_filenames:[String] = [
         "12",
@@ -54,7 +59,7 @@ class AsteroidsSoundService: NSObject {
         playerAtmos = AVAudioPlayerNode()
         playerBass = AVAudioPlayerNode()
         playerAction = AVAudioPlayerNode()
-        playerAtmos.volume = 0.2
+        playerAtmos.volume = 0.3
         playerBass.volume = 0.0 // TODO fade in
         playerAction.volume = 0.1
         
@@ -62,6 +67,7 @@ class AsteroidsSoundService: NSObject {
         explosionPlayers = AsteroidsSoundService.loadSamplesToPlayers(explosion_filenames)
         
         dispatchQueueNoises = DispatchQueue(label: "com.zuhlke.asteroids", attributes: [])
+        
     }
     
     static func loadSamplesToPlayers(_ filenames: [String]) -> [AVAudioPlayer] {
@@ -139,6 +145,11 @@ class AsteroidsSoundService: NSObject {
             print("Error!")
         }
         
+        eventCount = CircularCountingList(fps * 2)
+        maxEventCount = 1 // Cannot be zero
+        
+        volumeTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(volumeTimerAction), userInfo: nil, repeats: true)
+        
         playing = true
         
     }
@@ -148,6 +159,8 @@ class AsteroidsSoundService: NSObject {
         playerBass.stop()
         playerAction.stop()
         engine.stop()
+        
+        volumeTimer?.invalidate()
         
         playing = false
     }
@@ -196,8 +209,8 @@ class AsteroidsSoundService: NSObject {
                 break;
             }
         }
-        // TODO Volume is a moving average of activity
-        //        playerBass.volume = min(Float(bullets.count) / 40.0, Float(0.3))
+        
+        self.eventCount?.add(sumSoundEvents(soundEvents))
     }
     
     func makeBulletNoise(soundEvent: SoundEvent) {
@@ -215,7 +228,29 @@ class AsteroidsSoundService: NSObject {
             }
         }
     }
+
+    /* Once per second, adust the bass volume to be the fraction of the
+       current game activity over the highest game activity */
+    @objc func volumeTimerAction() {
+        let volumeDelta:Float = 0.02
+        if let activity = self.eventCount?.sum() {
+            DispatchQueue.main.async {
+                self.eventCount?.add(0)
+                if activity > self.maxEventCount {
+                    self.maxEventCount = activity;
+                }
+                let targetBassVolume = (Float(activity) / Float(self.maxEventCount) * 0.8) + 0.02
+                if (self.playerBass.volume < targetBassVolume) {
+                    self.playerBass.volume = self.playerBass.volume + volumeDelta
+                } else if (self.playerBass.volume > targetBassVolume) {
+                    self.playerBass.volume = self.playerBass.volume - volumeDelta
+                }
+            }
+        }
+    }
+
 }
+
 
 struct Explosion {
     let player : AVAudioPlayer
@@ -223,7 +258,7 @@ struct Explosion {
     init(pan: Double, avPlayer: AVAudioPlayer) {
         player = avPlayer;
         player.pan = adjustPan(pan: pan)
-        player.volume = 0.8
+        player.volume = 0.6
         player.prepareToPlay()
     }
     
@@ -238,7 +273,7 @@ struct Bullet {
     init(pan: Double, avPlayer: AVAudioPlayer) {
         player = avPlayer;
         player.pan = adjustPan(pan: pan)
-        player.volume = 0.3
+        player.volume = 0.2
         player.prepareToPlay()
     }
     func play() {
@@ -261,6 +296,21 @@ struct SoundEvent : JSONDecodable {
         self.pan = "pan" <~~ json;
         self.sound = "snd" <~~ json;
     }
+}
+
+func sumSoundEvents(_ soundEvents: [SoundEvent]) -> Int {
+    var t = 0
+    for e in soundEvents {
+        switch e.sound {
+        case .shoot?:
+            t = t + 1
+        case .explosion?:
+            t = t + 10
+        case .none:
+            break;
+        }
+    }
+    return t;
 }
 
 /*

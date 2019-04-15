@@ -169,16 +169,23 @@ class AsteroidsSoundService: NSObject {
     }
     
     /* Return an idle sound player. If all are busy, choose one to be restarted! */
-    func availablePlayer(_ candidates: [AVAudioPlayer]) -> AVAudioPlayer? {
-        let playersIdle = candidates.filter({!$0.isPlaying});
+    func availablePlayer(_ players: [AVAudioPlayer]) -> AVAudioPlayer? {
+        let playersIdle = idle(players);
         if (playersIdle.isEmpty) {
-            let p = candidates.randomElement()
-            p?.stop()
-            p?.currentTime = 0
-            return p;
+            return stop(players.randomElement());
         } else {
             return playersIdle.randomElement();
         }
+    }
+    
+    func idle(_ players: [AVAudioPlayer]) -> [AVAudioPlayer] {
+        return players.filter({!$0.isPlaying})
+    }
+    
+    func stop(_ player: AVAudioPlayer?) -> AVAudioPlayer? {
+        player?.stop()
+        player?.currentTime = 0
+        return player
     }
     
     func processSound(_ withText: String) {

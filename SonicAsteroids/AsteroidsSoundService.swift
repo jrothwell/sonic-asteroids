@@ -266,12 +266,12 @@ struct SoundEvent : JSONDecodable {
 }
 
 /*
- Apply the quadratic function y=x^5
+ Apply the quadratic function y=x³
  This keeps the pan inside the range -1..1
  But applies a bathtub curve to keep the sounds
  mostly in the centre of the soundscape.
  
- https://www.wolframalpha.com/input/?i=y%3Dx%5E5,+y%3D1,+y%3D-1
+ https://www.wolframalpha.com/input/?i=y%3Dx%5E3,+y%3D1,+y%3D-1
  */
 func adjustPan(pan: Double) -> Float {
     if (pan < -1.0) {
@@ -279,6 +279,6 @@ func adjustPan(pan: Double) -> Float {
     } else if (pan > 1.0) {
         return 0.0;
     } else {
-        return Float(pan * pan * pan * pan * pan);
+        return Float(pan * pan * pan);
     }
 }

@@ -95,18 +95,6 @@ class AsteroidsSoundService: NSObject {
         return audioPlayer
     }
     
-    func getRandomAudioPlayer(_ withArray: [Data]) -> AVAudioPlayer? {
-        var player : AVAudioPlayer?
-        do {
-            let randomIndex = Int(arc4random_uniform(UInt32(withArray.count)))
-            try player = AVAudioPlayer(data: withArray[randomIndex])
-        } catch {
-            print("Couldn't find data")
-        }
-        
-        return player
-    }
-    
     
     func start(_ path: String) {
         guard !playing else {
@@ -216,50 +204,48 @@ class AsteroidsSoundService: NSObject {
     
     func makeBulletNoise(soundEvent: SoundEvent) {
         dispatchQueueBulletNoises.async {
-            let player = self.availablePlayer(self.shootPlayers)
-            let bullet = Bullet(pan: soundEvent.pan ?? 0.0, avPlayer: player)
-            bullet.play()
+            if let player = self.availablePlayer(self.shootPlayers) {
+                Bullet(pan: soundEvent.pan ?? 0.0, avPlayer: player).play()
+            }
         }
     }
     
     func makeExplosionNoise(soundEvent: SoundEvent) {
         dispatchQueueExplosionNoises.async {
-            let player = self.availablePlayer(self.explosionPlayers)
-            let explosion = Explosion(pan: soundEvent.pan ?? 0.0, avPlayer: player)
-            explosion.play()
+            if let player = self.availablePlayer(self.explosionPlayers) {
+                Explosion(pan: soundEvent.pan ?? 0.0, avPlayer: player).play()
+            }
         }
     }
-    
 }
 
 struct Explosion {
-    let player : AVAudioPlayer?
+    let player : AVAudioPlayer
     
-    init(pan: Double, avPlayer: AVAudioPlayer?) {
+    init(pan: Double, avPlayer: AVAudioPlayer) {
         player = avPlayer;
-        player!.pan = adjustPan(pan: pan)
-        player!.volume = 0.8
-        player!.prepareToPlay()
+        player.pan = adjustPan(pan: pan)
+        player.volume = 0.8
+        player.prepareToPlay()
     }
     
     func play() {
-        player!.play()
+        player.play()
     }
 }
 
 struct Bullet {
-    let player : AVAudioPlayer?
+    let player : AVAudioPlayer
     
-    init(pan: Double, avPlayer: AVAudioPlayer?) {
+    init(pan: Double, avPlayer: AVAudioPlayer) {
         player = avPlayer;
-        player!.pan = adjustPan(pan: pan)
-        player!.volume = 0.3
-        player!.prepareToPlay()
+        player.pan = adjustPan(pan: pan)
+        player.volume = 0.3
+        player.prepareToPlay()
     }
     func play() {
-        player!.play()
+        player.play()
     }
-    
 }
 
 enum SoundType: String {

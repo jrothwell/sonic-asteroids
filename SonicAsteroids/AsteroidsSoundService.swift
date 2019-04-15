@@ -26,8 +26,7 @@ class AsteroidsSoundService: NSObject {
     
     var playing : Bool = false
     
-    var dispatchQueueBulletNoises : DispatchQueue
-    var dispatchQueueExplosionNoises : DispatchQueue
+    var dispatchQueueNoises : DispatchQueue
     
     var explosion_filenames:[String] = [
         "12",
@@ -62,8 +61,7 @@ class AsteroidsSoundService: NSObject {
         shootPlayers = AsteroidsSoundService.loadSamplesToPlayers(shoot_filenames)
         explosionPlayers = AsteroidsSoundService.loadSamplesToPlayers(explosion_filenames)
         
-        dispatchQueueBulletNoises = DispatchQueue(label: "com.zuhlke.asteroids", attributes: [])
-        dispatchQueueExplosionNoises = DispatchQueue(label: "com.zuhlke.asteroids", attributes: [])
+        dispatchQueueNoises = DispatchQueue(label: "com.zuhlke.asteroids", attributes: [])
     }
     
     static func loadSamplesToPlayers(_ filenames: [String]) -> [AVAudioPlayer] {
@@ -203,7 +201,7 @@ class AsteroidsSoundService: NSObject {
     }
     
     func makeBulletNoise(soundEvent: SoundEvent) {
-        dispatchQueueBulletNoises.async {
+        dispatchQueueNoises.async {
             if let player = self.availablePlayer(self.shootPlayers) {
                 Bullet(pan: soundEvent.pan ?? 0.0, avPlayer: player).play()
             }
@@ -211,7 +209,7 @@ class AsteroidsSoundService: NSObject {
     }
     
     func makeExplosionNoise(soundEvent: SoundEvent) {
-        dispatchQueueExplosionNoises.async {
+        dispatchQueueNoises.async {
             if let player = self.availablePlayer(self.explosionPlayers) {
                 Explosion(pan: soundEvent.pan ?? 0.0, avPlayer: player).play()
             }

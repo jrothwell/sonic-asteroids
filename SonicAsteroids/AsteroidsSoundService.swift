@@ -59,9 +59,9 @@ class AsteroidsSoundService: NSObject {
         playerAtmos = AVAudioPlayerNode()
         playerBass = AVAudioPlayerNode()
         playerAction = AVAudioPlayerNode()
-        playerAtmos.volume = 0.3
+        playerAtmos.volume = 0.4
         playerBass.volume = 0.0 // TODO fade in
-        playerAction.volume = 0.1
+        playerAction.volume = 0.3
         
         shootPlayers = AsteroidsSoundService.loadSamplesToPlayers(shoot_filenames)
         explosionPlayers = AsteroidsSoundService.loadSamplesToPlayers(explosion_filenames)
@@ -258,7 +258,7 @@ struct Explosion {
     init(pan: Double, avPlayer: AVAudioPlayer) {
         player = avPlayer;
         player.pan = adjustPan(pan: pan)
-        player.volume = 0.6
+        player.volume = 0.5
         player.prepareToPlay()
     }
     
@@ -273,7 +273,7 @@ struct Bullet {
     init(pan: Double, avPlayer: AVAudioPlayer) {
         player = avPlayer;
         player.pan = adjustPan(pan: pan)
-        player.volume = 0.2
+        player.volume = 0.4
         player.prepareToPlay()
     }
     func play() {
@@ -287,12 +287,12 @@ enum SoundType: String {
 }
 
 struct SoundEvent : JSONDecodable {
-    let gameTime: Int?
+    let size: Int?
     let pan: Double?
     let sound: SoundType?
     
     init?(json: JSON) {
-        self.gameTime = "t" <~~ json;
+        self.size = "size" <~~ json;
         self.pan = "pan" <~~ json;
         self.sound = "snd" <~~ json;
     }

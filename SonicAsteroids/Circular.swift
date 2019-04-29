@@ -29,4 +29,8 @@ class CircularCountingList {
     func sum() -> Int {
         return counts.reduce(0, +)
     }
+    
+    func max() -> Int? {
+        return counts.max();
+    }
 }

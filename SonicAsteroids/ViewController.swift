@@ -18,7 +18,7 @@ class ViewController: NSViewController {
     @IBOutlet weak var backgroundMusicField: NSTextField!
     
     override func viewDidAppear() {
-        addressField.stringValue = "ws://ec2-52-28-1-127.eu-central-1.compute.amazonaws.com/sound" // sensible default
+        addressField.stringValue = "ws://localhost:8065/sound"
     }
     
     @IBAction func browseForBackgroundMusic(_ sender: AnyObject) {

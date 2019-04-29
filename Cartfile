@@ -1,2 +1,2 @@
-github "daltoniam/Starscream" >= 1.1.3
-github "hkellaway/Gloss" "swift_3.0"
+github "daltoniam/Starscream" == 3.0.6
+github "hkellaway/Gloss"

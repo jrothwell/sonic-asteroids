@@ -9,7 +9,7 @@
 import Cocoa
 import AVFoundation
 import SpriteKit
-import Gloss
+//import Gloss
 
 typealias Payload = [String: AnyObject]
 
@@ -121,15 +121,15 @@ class AsteroidsSoundService: NSObject {
         do {
             let atmosFile = try AVAudioFile(forReading: atmosUrl)
             let atmosBuffer = AVAudioPCMBuffer(pcmFormat: atmosFile.processingFormat, frameCapacity: AVAudioFrameCount(atmosFile.length))
-            try atmosFile.read(into: atmosBuffer)
+            try atmosFile.read(into: atmosBuffer!)
             
             let bassFile = try AVAudioFile(forReading: bassUrl)
             let bassBuffer = AVAudioPCMBuffer(pcmFormat: bassFile.processingFormat, frameCapacity: AVAudioFrameCount(bassFile.length))
-            try bassFile.read(into: bassBuffer)
+            try bassFile.read(into: bassBuffer!)
             
             let actionFile = try AVAudioFile(forReading: actionUrl)
             let actionBuffer = AVAudioPCMBuffer(pcmFormat: actionFile.processingFormat, frameCapacity: AVAudioFrameCount(actionFile.length))
-            try actionFile.read(into: actionBuffer)
+            try actionFile.read(into: actionBuffer!)
             
             
             engine.attach(playerAtmos)
@@ -137,13 +137,13 @@ class AsteroidsSoundService: NSObject {
             engine.attach(playerAction)
 
             
-            engine.connect(playerAtmos, to: engine.mainMixerNode, format: atmosBuffer.format)
-            engine.connect(playerBass, to: engine.mainMixerNode, format: bassBuffer.format)
-            engine.connect(playerAction, to: engine.mainMixerNode, format: actionBuffer.format)
+            engine.connect(playerAtmos, to: engine.mainMixerNode, format: atmosBuffer!.format)
+            engine.connect(playerBass, to: engine.mainMixerNode, format: bassBuffer!.format)
+            engine.connect(playerAction, to: engine.mainMixerNode, format: actionBuffer!.format)
             // Schedule playerAtmos and playerBass to play the buffer on a loop
-            playerAtmos.scheduleBuffer(atmosBuffer, at: nil, options: AVAudioPlayerNodeBufferOptions.loops, completionHandler: nil)
-            playerBass.scheduleBuffer(bassBuffer, at: nil, options: AVAudioPlayerNodeBufferOptions.loops, completionHandler: nil)
-            playerAction.scheduleBuffer(actionBuffer, at: nil, options: AVAudioPlayerNodeBufferOptions.loops, completionHandler: nil)
+            playerAtmos.scheduleBuffer(atmosBuffer!, at: nil, options: AVAudioPlayerNodeBufferOptions.loops, completionHandler: nil)
+            playerBass.scheduleBuffer(bassBuffer!, at: nil, options: AVAudioPlayerNodeBufferOptions.loops, completionHandler: nil)
+            playerAction.scheduleBuffer(actionBuffer!, at: nil, options: AVAudioPlayerNodeBufferOptions.loops, completionHandler: nil)
 
             // Start the audio engine
             engine.prepare()
@@ -179,8 +179,8 @@ class AsteroidsSoundService: NSObject {
     
     func processSound(_ withText: String) {
         
-        let date = Date()
-        print("Got deserialisable report at \(date.timeIntervalSince1970)")
+//        let date = Date()
+//        print("Got deserialisable report at \(date.timeIntervalSince1970)")
         var json : Payload!
         
         do {
@@ -195,12 +195,14 @@ class AsteroidsSoundService: NSObject {
             return
         }
         
-        guard let explosions = json["x"] as? [[Int]] else {
+        guard let explosions = json["x"] as? [[Float]] else {
             print("Couldn't deserialise explosions")
             return
         }
 
-        print("I see \(bullets.count) bullets and \(explosions.count) explosions");
+        if ((bullets.count > 0) || (explosions.count > 0)) {
+            print("I see \(bullets.count) bullets and \(explosions.count) explosions");
+        }
         
         for bullet in bullets {
             dispatchQueueBulletNoises.async {
@@ -220,17 +222,17 @@ class AsteroidsSoundService: NSObject {
     }
     
     func makeBulletNoise(_ bulletInfo : [Int]) {
-        guard(seenBullets[bulletInfo[0]] == nil) else {
+        guard(seenBullets[Int(bulletInfo[0])] == nil) else {
             print("I've already seen bullet \(bulletInfo[0]), not making a noise")
             return
         }
         let bullet = Bullet(atX: bulletInfo[1], atY: bulletInfo[2])
-        seenBullets[bulletInfo[0]] = bullet
+        seenBullets[Int(bulletInfo[0])] = bullet
         print("I'm making a noise for bullet \(bulletInfo[0])")
         bullet.play()
     }
     
-    func makeExplosionNoise(_ explosionInfo : [Int]) {
+    func makeExplosionNoise(_ explosionInfo : [Float]) {
         let explosion = Explosion(atX: explosionInfo[0], atY: explosionInfo[1])
         seenExplosions.append(explosion)
         explosion.play()
@@ -238,11 +240,11 @@ class AsteroidsSoundService: NSObject {
 }
 
 struct Explosion {
-    let x : Int
-    let y : Int
+    let x : Float
+    let y : Float
     let player : AVAudioPlayer?
     
-    init(atX: Int, atY: Int) {
+    init(atX: Float, atY: Float) {
         x = atX
         y = atY
         player = AsteroidsSoundService.INSTANCE.getRandomAudioPlayer(AsteroidsSoundService.INSTANCE.explosionAudioFiles)

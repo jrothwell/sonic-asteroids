@@ -1,6 +1,6 @@
 # SonicAsteroids sound engine
 
-A sound engine for macOS, written in Swift 4.2, for the [Elixoids v3 game engine](https://github.com/devstopfix/elixoids). No longer compatible with the v1 branch sound stream!
+A sound engine for macOS, written in Swift 4.2, for the [Elixoids v3 game engine](https://github.com/devstopfix/elixoids). No longer compatible with the v1 branch sound stream! Listen to the [cacophony with headphones](https://vimeo.com/332919838).
 
 ## Getting started
 To install dependencies you will need [Carthage](https://github.com/Carthage/Carthage) (this can be installed using homebrew.)

@@ -73,11 +73,9 @@ class AsteroidsSoundService: NSObject {
     
     static func loadSamplesToPlayers(_ filenames: [String]) -> [AVAudioPlayer] {
         var players = [AVAudioPlayer]()
-        for file : String in filenames {
-            if let player =  AsteroidsSoundService.setupAudioPlayerWithFile(file as NSString, type: "mp3"){
-                players.append(player)
-            }
-        }
+        filenames.compactMap { filename in
+            AsteroidsSoundService.setupAudioPlayerWithFile(filename as NSString, type: "mp3")
+            }.forEach { players.append($0)}
         return players
     }
     
@@ -198,10 +196,8 @@ class AsteroidsSoundService: NSObject {
         
         for sound in soundEvents {
             switch sound.sound {
-            case .shoot?: self.makeBulletNoise(soundEvent: sound)
-            case .explosion?: self.makeExplosionNoise(soundEvent: sound)
-            case .none:
-                break
+            case .shot: self.makeBulletNoise(soundEvent: sound)
+            case .explosion: self.makeExplosionNoise(soundEvent: sound)
             }
         }
         
@@ -211,7 +207,7 @@ class AsteroidsSoundService: NSObject {
     func makeBulletNoise(soundEvent: SoundEvent) {
         dispatchQueueNoises.async {
             if let player = self.availablePlayer(self.shootPlayers) {
-                Bullet(pan: soundEvent.pan ?? 0.0, avPlayer: player).play()
+                Bullet(pan: soundEvent.pan, avPlayer: player).play()
             }
         }
     }
@@ -219,7 +215,7 @@ class AsteroidsSoundService: NSObject {
     func makeExplosionNoise(soundEvent: SoundEvent) {
         dispatchQueueNoises.async {
             if let player = self.availablePlayer(self.explosionPlayers) {
-                Explosion(pan: soundEvent.pan ?? 0.0, avPlayer: player).play()
+                Explosion(pan: soundEvent.pan, avPlayer: player).play()
             }
         }
     }
@@ -278,26 +274,24 @@ struct Bullet {
 }
 
 enum SoundType: String, Codable {
-    case shoot = "f"
+    case shot = "f"
     case explosion = "x"
 }
 
 struct SoundEvent : Codable {
-    let size: Int?
-    let pan: Double?
-    let sound: SoundType?
+    let size: Int
+    let pan: Double
+    let sound: SoundType
 }
 
 func sumSoundEvents(_ soundEvents: [SoundEvent]) -> Int {
     var t = 0
     for e in soundEvents {
         switch e.sound {
-        case .shoot?:
+        case .shot:
             t = t + 1
-        case .explosion?:
+        case .explosion:
             t = t + 5
-        case .none:
-            break
         }
     }
     return t

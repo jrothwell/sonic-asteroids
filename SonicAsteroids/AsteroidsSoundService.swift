@@ -13,8 +13,6 @@ import Gloss
 
 typealias Payload = [NSDictionary]
 
-let fps = 12
-
 class AsteroidsSoundService: NSObject {
     static let INSTANCE = AsteroidsSoundService()
     
@@ -29,9 +27,10 @@ class AsteroidsSoundService: NSObject {
     
     var dispatchQueueNoises : DispatchQueue
     
-    var eventCount : CircularCountingList?
+    var eventCountThisSecond = 0;
+    var shortRollingCount : CircularCountingList?
+    var longRollingCount : CircularCountingList?
     var volumeTimer : Timer?
-    var maxEventCount = 0;
     
     var explosion_filenames:[String] = [
         "12",
@@ -79,7 +78,7 @@ class AsteroidsSoundService: NSObject {
         }
         return players;
     }
-
+    
     
     static func setupAudioPlayerWithFile(_ file:NSString, type:NSString) -> AVAudioPlayer?  {
         let path = Bundle.main.path(forResource: file as String, ofType: type as String)
@@ -145,8 +144,9 @@ class AsteroidsSoundService: NSObject {
             print("Error!")
         }
         
-        eventCount = CircularCountingList(fps * 2)
-        maxEventCount = 1 // Cannot be zero
+        eventCountThisSecond = 0;
+        shortRollingCount = CircularCountingList(3) // Keep  3 readings of eventCountThisSecond
+        longRollingCount = CircularCountingList(6) // Keep 6 readings of eventCountThisSecond
         
         volumeTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(volumeTimerAction), userInfo: nil, repeats: true)
         
@@ -210,7 +210,7 @@ class AsteroidsSoundService: NSObject {
             }
         }
         
-        self.eventCount?.add(sumSoundEvents(soundEvents))
+        self.eventCountThisSecond += sumSoundEvents(soundEvents)
     }
     
     func makeBulletNoise(soundEvent: SoundEvent) {
@@ -228,27 +228,28 @@ class AsteroidsSoundService: NSObject {
             }
         }
     }
-
-    /* Once per second, adust the bass volume to be the fraction of the
-       current game activity over the highest game activity */
+    
+    /* Once per second, adjust the bass volume to be the fraction of the 3s game activity over the 6s game activity */
     @objc func volumeTimerAction() {
-        let volumeDelta:Float = 0.02
-        if let activity = self.eventCount?.sum() {
-            DispatchQueue.main.async {
-                self.eventCount?.add(0)
-                if activity > self.maxEventCount {
-                    self.maxEventCount = activity;
-                }
-                let targetBassVolume = (Float(activity) / Float(self.maxEventCount) * 0.8) + 0.02
-                if (self.playerBass.volume < targetBassVolume) {
-                    self.playerBass.volume = self.playerBass.volume + volumeDelta
-                } else if (self.playerBass.volume > targetBassVolume) {
-                    self.playerBass.volume = self.playerBass.volume - volumeDelta
-                }
+        self.shortRollingCount?.add(self.eventCountThisSecond);
+        self.longRollingCount?.add(self.eventCountThisSecond);
+        
+        let volumeDelta:Float = 0.05
+        DispatchQueue.main.async {
+            let n = Float(self.shortRollingCount?.sum() ?? 0);
+            let d = Float(self.longRollingCount?.sum() ?? 1) + 1.0;
+            
+            let targetBassVolume = volumeDelta + ( (n/d) * 0.5);
+            
+            if (self.playerBass.volume < targetBassVolume) {
+                self.playerBass.volume = self.playerBass.volume + volumeDelta
+            } else if (self.playerBass.volume > targetBassVolume) {
+                self.playerBass.volume = max(self.playerBass.volume - volumeDelta, volumeDelta)
             }
         }
+        self.eventCountThisSecond = 0;
     }
-
+    
 }
 
 
@@ -305,7 +306,7 @@ func sumSoundEvents(_ soundEvents: [SoundEvent]) -> Int {
         case .shoot?:
             t = t + 1
         case .explosion?:
-            t = t + 10
+            t = t + 5
         case .none:
             break;
         }

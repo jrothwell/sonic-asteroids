@@ -9,7 +9,6 @@
 import Cocoa
 import AVFoundation
 import SpriteKit
-import Gloss
 
 typealias Payload = [NSDictionary]
 
@@ -187,16 +186,9 @@ class AsteroidsSoundService: NSObject {
         return player
     }
     
-    func processSound(_ withText: String) {
-        var json : Payload!
-        do {
-            json = try JSONSerialization.jsonObject(with: withText.data(using: String.Encoding.utf8)!, options: JSONSerialization.ReadingOptions()) as? Payload
-        } catch {
-            print(error)
-            return
-        }
-        
-        guard let soundEvents = [SoundEvent].from(jsonArray: json as! [JSON]) else {
+    func processSound(with text: String) {
+        guard let data = text.data(using: String.Encoding.utf8),
+              let soundEvents = try? JSONDecoder().decode([SoundEvent].self, from: data) else {
             print("Bad sound stream")
             return
         }
@@ -282,21 +274,15 @@ struct Bullet {
     }
 }
 
-enum SoundType: String {
+enum SoundType: String, Codable {
     case shoot = "f";
     case explosion = "x";
 }
 
-struct SoundEvent : JSONDecodable {
+struct SoundEvent : Codable {
     let size: Int?
     let pan: Double?
     let sound: SoundType?
-    
-    init?(json: JSON) {
-        self.size = "size" <~~ json;
-        self.pan = "pan" <~~ json;
-        self.sound = "snd" <~~ json;
-    }
 }
 
 func sumSoundEvents(_ soundEvents: [SoundEvent]) -> Int {

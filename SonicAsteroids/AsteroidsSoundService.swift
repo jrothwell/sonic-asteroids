@@ -13,7 +13,7 @@ import SpriteKit
 typealias Payload = [NSDictionary]
 
 class AsteroidsSoundService: NSObject {
-    static let INSTANCE = AsteroidsSoundService()
+    static let shared = AsteroidsSoundService()
     
     var playing : Bool = false
     var engine : AVAudioEngine

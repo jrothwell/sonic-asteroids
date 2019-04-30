@@ -28,7 +28,7 @@ class AsteroidsGameService: NSObject, WebSocketDelegate {
                 callbackDefinitely(text)
             }
             DispatchQueue.global(qos: DispatchQoS.userInteractive.qosClass).async {
-                AsteroidsSoundService.INSTANCE.processSound(with: text)
+                AsteroidsSoundService.shared.processSound(with: text)
             }
         }
     }
@@ -36,7 +36,7 @@ class AsteroidsGameService: NSObject, WebSocketDelegate {
     func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
     }
     
-    static let INSTANCE = AsteroidsGameService() // singleton
+    static let shared = AsteroidsGameService()
     var callback : ((String) -> Void)?
     var connectedCallback : ((Bool, String?) -> Void)?
     var socket : WebSocket?

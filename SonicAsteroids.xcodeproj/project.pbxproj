@@ -322,7 +322,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Zuhlke UK";
 				TargetAttributes = {
 					8B9D9C461D2AE79C00C82A8F = {
@@ -343,7 +343,7 @@
 			};
 			buildConfigurationList = 8B9D9C421D2AE79C00C82A8F /* Build configuration list for PBXProject "SonicAsteroids" */;
 			compatibilityVersion = "Xcode 10.0";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,

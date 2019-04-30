@@ -22,7 +22,7 @@ class AsteroidsGameService: NSObject, WebSocketDelegate {
             os_log("WebSocket disconnected with error: %s", log: log, type: .error, error.localizedDescription)
         } else {
             os_log("WebSocket disconnected cleanly.", log: log, type: .info)
-        };
+        }
     }
     
     func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
@@ -34,7 +34,7 @@ class AsteroidsGameService: NSObject, WebSocketDelegate {
             DispatchQueue.global(qos: DispatchQoS.userInteractive.qosClass).async {
                 AsteroidsSoundService.shared.processSound(with: text)
             }
-        };
+        }
     }
     
     func websocketDidReceiveData(socket: WebSocketClient, data: Data) {

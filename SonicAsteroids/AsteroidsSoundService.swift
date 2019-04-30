@@ -29,7 +29,7 @@ class AsteroidsSoundService: NSObject {
     
     var dispatchQueueNoises : DispatchQueue
     
-    var eventCountThisSecond = 0;
+    var eventCountThisSecond = 0
     var shortRollingCount : CircularCountingList?
     var longRollingCount : CircularCountingList?
     var volumeTimer : Timer?
@@ -42,7 +42,7 @@ class AsteroidsSoundService: NSObject {
         "9",
         "1",
         "11"
-    ];
+    ]
     
     var shoot_filenames:[String] = [
         "Velocity Zapper_bip13",
@@ -53,7 +53,7 @@ class AsteroidsSoundService: NSObject {
         "Velocity Zapper_bip18",
         "Velocity Zapper_bip5",
         "Velocity Zapper_bip1"
-    ];
+    ]
     
     override init() {
         engine = AVAudioEngine()
@@ -75,10 +75,10 @@ class AsteroidsSoundService: NSObject {
         var players = [AVAudioPlayer]()
         for file : String in filenames {
             if let player =  AsteroidsSoundService.setupAudioPlayerWithFile(file as NSString, type: "mp3"){
-                players.append(player);
+                players.append(player)
             }
         }
-        return players;
+        return players
     }
     
     
@@ -146,9 +146,9 @@ class AsteroidsSoundService: NSObject {
             os_log("Error starting audio: %s", log: log, type: .error, error.localizedDescription)
         }
         
-        eventCountThisSecond = 0;
-        shortRollingCount = CircularCountingList(3) // Keep  3 readings of eventCountThisSecond
-        longRollingCount = CircularCountingList(6) // Keep 6 readings of eventCountThisSecond
+        eventCountThisSecond = 0
+        shortRollingCount = CircularCountingList(withSize: 3) // Keep  3 readings of eventCountThisSecond
+        longRollingCount = CircularCountingList(withSize: 6) // Keep 6 readings of eventCountThisSecond
         
         volumeTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(volumeTimerAction), userInfo: nil, repeats: true)
         
@@ -169,11 +169,11 @@ class AsteroidsSoundService: NSObject {
     
     /* Return an idle sound player. If all are busy, choose one to be restarted! */
     func availablePlayer(_ players: [AVAudioPlayer]) -> AVAudioPlayer? {
-        let playersIdle = idle(players);
+        let playersIdle = idle(players)
         if (playersIdle.isEmpty) {
-            return stop(players.randomElement());
+            return stop(players.randomElement())
         } else {
-            return playersIdle.randomElement();
+            return playersIdle.randomElement()
         }
     }
     
@@ -201,7 +201,7 @@ class AsteroidsSoundService: NSObject {
             case .shoot?: self.makeBulletNoise(soundEvent: sound)
             case .explosion?: self.makeExplosionNoise(soundEvent: sound)
             case .none:
-                break;
+                break
             }
         }
         
@@ -226,15 +226,15 @@ class AsteroidsSoundService: NSObject {
     
     /* Once per second, adjust the bass volume to be the fraction of the 3s game activity over the 6s game activity */
     @objc func volumeTimerAction() {
-        self.shortRollingCount?.add(self.eventCountThisSecond);
-        self.longRollingCount?.add(self.eventCountThisSecond);
+        self.shortRollingCount?.add(self.eventCountThisSecond)
+        self.longRollingCount?.add(self.eventCountThisSecond)
         
         let volumeDelta:Float = 0.05
         DispatchQueue.main.async {
-            let n = Float(self.shortRollingCount?.sum() ?? 0);
-            let d = Float(self.longRollingCount?.sum() ?? 1) + 1.0;
+            let n = Float(self.shortRollingCount?.sum() ?? 0)
+            let d = Float(self.longRollingCount?.sum() ?? 1) + 1.0
             
-            let targetBassVolume = volumeDelta + ( (n/d) * 0.5);
+            let targetBassVolume = volumeDelta + ( (n/d) * 0.5)
             
             if (self.playerBass.volume < targetBassVolume) {
                 self.playerBass.volume = self.playerBass.volume + volumeDelta
@@ -242,7 +242,7 @@ class AsteroidsSoundService: NSObject {
                 self.playerBass.volume = max(self.playerBass.volume - volumeDelta, volumeDelta)
             }
         }
-        self.eventCountThisSecond = 0;
+        self.eventCountThisSecond = 0
     }
     
 }
@@ -252,7 +252,7 @@ struct Explosion {
     let player : AVAudioPlayer
     
     init(pan: Double, avPlayer: AVAudioPlayer) {
-        player = avPlayer;
+        player = avPlayer
         player.pan = adjustPan(pan: pan)
         player.volume = 0.5
         player.prepareToPlay()
@@ -267,7 +267,7 @@ struct Bullet {
     let player : AVAudioPlayer
     
     init(pan: Double, avPlayer: AVAudioPlayer) {
-        player = avPlayer;
+        player = avPlayer
         player.pan = adjustPan(pan: pan)
         player.volume = 0.4
         player.prepareToPlay()
@@ -278,8 +278,8 @@ struct Bullet {
 }
 
 enum SoundType: String, Codable {
-    case shoot = "f";
-    case explosion = "x";
+    case shoot = "f"
+    case explosion = "x"
 }
 
 struct SoundEvent : Codable {
@@ -297,10 +297,10 @@ func sumSoundEvents(_ soundEvents: [SoundEvent]) -> Int {
         case .explosion?:
             t = t + 5
         case .none:
-            break;
+            break
         }
     }
-    return t;
+    return t
 }
 
 /*
@@ -313,10 +313,10 @@ func sumSoundEvents(_ soundEvents: [SoundEvent]) -> Int {
  */
 func adjustPan(pan: Double) -> Float {
     if (pan < -1.0) {
-        return 0.0;
+        return 0.0
     } else if (pan > 1.0) {
-        return 0.0;
+        return 0.0
     } else {
-        return Float(pan * pan * pan);
+        return Float(pan * pan * pan)
     }
 }

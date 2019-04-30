@@ -8,21 +8,25 @@
 
 import Cocoa
 import Starscream
+import os.log
+
+private let log = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "game")
 
 class AsteroidsGameService: NSObject, WebSocketDelegate {
     func websocketDidConnect(socket: WebSocketClient) {
-        print("WebSocket connected!");
+        os_log("WebSocket connected", log: log, type: .info)
     }
     
     func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
-        if let errorDefinitely = error {
-            print("WebSocket disconnected with error \(errorDefinitely.localizedDescription)")
+        if let error = error {
+            os_log("WebSocket disconnected with error: %s", log: log, type: .error, error.localizedDescription)
         } else {
-            print("WebSocket disconnected cleanly.")
+            os_log("WebSocket disconnected cleanly.", log: log, type: .info)
         };
     }
     
     func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
+        os_log("Got a text data frame of length %d", log: log, type: .info, text.count)
         if let callbackDefinitely = callback {
             DispatchQueue.main.async {
                 callbackDefinitely(text)
@@ -34,7 +38,7 @@ class AsteroidsGameService: NSObject, WebSocketDelegate {
     }
     
     func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
-        print("got some data: \(data.count)");
+        os_log("Got a binary data frame of length %d. Doing nothing", log: log, type: .info, data.count)
     }
     
     static let shared = AsteroidsGameService()

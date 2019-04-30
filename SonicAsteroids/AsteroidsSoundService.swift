@@ -9,6 +9,9 @@
 import Cocoa
 import AVFoundation
 import SpriteKit
+import os.log
+
+private let log = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "sound")
 
 typealias Payload = [NSDictionary]
 
@@ -79,7 +82,7 @@ class AsteroidsSoundService: NSObject {
     }
     
     
-    static func setupAudioPlayerWithFile(_ file:NSString, type:NSString) -> AVAudioPlayer?  {
+    static func setupAudioPlayerWithFile(_ file: NSString, type:NSString) -> AVAudioPlayer?  {
         let path = Bundle.main.path(forResource: file as String, ofType: type as String)
         let url = URL(fileURLWithPath: path!)
         
@@ -88,8 +91,8 @@ class AsteroidsSoundService: NSObject {
         do {
             try audioPlayer = AVAudioPlayer(contentsOf: url)
         } catch {
-            print("Player not available")
-            // TODO fail if we cannot play sounds...
+            os_log("Audio player not available: %s", log: log, type: .error, error.localizedDescription)
+            fatalError("Audio player not available. \(error.localizedDescription)")
         }
         
         return audioPlayer
@@ -98,7 +101,7 @@ class AsteroidsSoundService: NSObject {
     
     func start(_ path: String) {
         guard !playing else {
-            print("Already playing...")
+            os_log("Tried to start playing when we were already playing.", log: log, type: .default)
             return
         }
         
@@ -140,7 +143,7 @@ class AsteroidsSoundService: NSObject {
             playerBass.play()
             playerAction.play()
         } catch {
-            print("Error!")
+            os_log("Error starting audio: %s", log: log, type: .error, error.localizedDescription)
         }
         
         eventCountThisSecond = 0;
@@ -189,7 +192,7 @@ class AsteroidsSoundService: NSObject {
     func processSound(with text: String) {
         guard let data = text.data(using: String.Encoding.utf8),
               let soundEvents = try? JSONDecoder().decode([SoundEvent].self, from: data) else {
-            print("Bad sound stream")
+            os_log("Could not decode sound stream: %s", log: log, type: .error, text)
             return
         }
         

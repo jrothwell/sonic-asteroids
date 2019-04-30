@@ -331,12 +331,12 @@
 					};
 					8B9D9C571D2AE79C00C82A8F = {
 						CreatedOnToolsVersion = 7.3.1;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 1010;
 						TestTargetID = 8B9D9C461D2AE79C00C82A8F;
 					};
 					8B9D9C621D2AE79C00C82A8F = {
 						CreatedOnToolsVersion = 7.3.1;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 1010;
 						TestTargetID = 8B9D9C461D2AE79C00C82A8F;
 					};
 				};
@@ -623,7 +623,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.zuhlke.SonicAsteroidsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.2;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SonicAsteroids.app/Contents/MacOS/SonicAsteroids";
 			};
 			name = Debug;
@@ -645,7 +645,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.zuhlke.SonicAsteroidsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.2;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SonicAsteroids.app/Contents/MacOS/SonicAsteroids";
 			};
 			name = Release;
@@ -662,7 +662,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.zuhlke.SonicAsteroidsUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.2;
 				TEST_TARGET_NAME = SonicAsteroids;
 			};
 			name = Debug;
@@ -679,7 +679,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.zuhlke.SonicAsteroidsUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.2;
 				TEST_TARGET_NAME = SonicAsteroids;
 			};
 			name = Release;

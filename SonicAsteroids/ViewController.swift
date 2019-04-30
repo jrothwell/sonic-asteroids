@@ -35,14 +35,14 @@ class ViewController: NSViewController {
     @IBAction func beginListening(_ sender: AnyObject) {
         listening = !listening
         if listening {
-            AsteroidsGameService.INSTANCE.connect(URL(string: self.addressField.stringValue)!,
+            AsteroidsGameService.shared.connect(URL(string: self.addressField.stringValue)!,
                                                   callback: updateGameState)
             self.addressField.isEditable = false
             self.listenButton.title = "Stop Listening"
-            AsteroidsSoundService.INSTANCE.start(backgroundMusicField.stringValue)
+            AsteroidsSoundService.shared.start(backgroundMusicField.stringValue)
         } else {
-            AsteroidsSoundService.INSTANCE.stop()
-            AsteroidsGameService.INSTANCE.disconnect()
+            AsteroidsSoundService.shared.stop()
+            AsteroidsGameService.shared.disconnect()
             self.addressField.isEditable = true
             self.listenButton.title = "Listen"
             

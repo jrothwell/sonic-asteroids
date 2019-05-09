@@ -11,6 +11,7 @@ import Cocoa
 class ViewController: NSViewController {
     
     var listening: Bool = false
+    var initUrl: String = "ws://localhost:8065/0/sound"
 
     @IBOutlet weak var addressField: NSTextField!
     @IBOutlet weak var listenButton: NSButton!
@@ -18,7 +19,7 @@ class ViewController: NSViewController {
     @IBOutlet weak var backgroundMusicField: NSTextField!
     
     override func viewDidAppear() {
-        addressField.stringValue = "ws://localhost:8065/0/sound"
+        addressField.stringValue = self.initUrl
     }
     
     @IBAction func browseForBackgroundMusic(_ sender: AnyObject) {
@@ -56,7 +57,9 @@ class ViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        if CommandLine.arguments.count >= 2 {
+            self.initUrl = CommandLine.arguments[1]
+        }
     }
 
     override var representedObject: Any? {

@@ -194,7 +194,8 @@ class AsteroidsSoundService: NSObject {
         }
         
         for sound in soundEvents {
-            switch sound.sound {
+            print(sound)
+            switch sound.snd {
             case .shoot?: self.makeBulletNoise(soundEvent: sound)
             case .explosion?: self.makeExplosionNoise(soundEvent: sound)
             case .none:
@@ -282,13 +283,13 @@ enum SoundType: String, Codable {
 struct SoundEvent : Codable {
     let size: Int?
     let pan: Double?
-    let sound: SoundType?
+    let snd: SoundType?
 }
 
 func sumSoundEvents(_ soundEvents: [SoundEvent]) -> Int {
     var t = 0
     for e in soundEvents {
-        switch e.sound {
+        switch e.snd {
         case .shoot?:
             t = t + 1
         case .explosion?:

@@ -57,7 +57,7 @@ class ViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if CommandLine.arguments.count >= 2 {
+        if (CommandLine.arguments.count) >= 2 && (CommandLine.arguments[1].starts(with: "ws")) {
             self.initUrl = CommandLine.arguments[1]
         }
     }

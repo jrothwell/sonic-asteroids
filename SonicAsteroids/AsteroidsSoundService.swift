@@ -194,7 +194,6 @@ class AsteroidsSoundService: NSObject {
         }
         
         for sound in soundEvents {
-            print(sound)
             switch sound.snd {
             case .shoot?: self.makeBulletNoise(soundEvent: sound)
             case .explosion?: self.makeExplosionNoise(soundEvent: sound)
@@ -206,11 +205,12 @@ class AsteroidsSoundService: NSObject {
         self.eventCountThisSecond += sumSoundEvents(soundEvents)
     }
     
+    /* Map pan to bullet sound - therefore each ship should use the same sound until they hyperspace */
     func makeBulletNoise(soundEvent: SoundEvent) {
         dispatchQueueNoises.async {
-            let n = Int(Int(soundEvent.pan ?? 0 * 100).magnitude) % Int(self.shootPlayers.count);
-            print(n);
-            if let player = self.stop(self.shootPlayers[n]) {
+            let pan = Int(((soundEvent.pan ?? 0) * 100).magnitude)
+            let i = pan % self.shootPlayers.count;
+            if let player = self.stop(self.shootPlayers[i]) {
                 Bullet(pan: soundEvent.pan ?? 0.0, avPlayer: player).play()
             }
         }

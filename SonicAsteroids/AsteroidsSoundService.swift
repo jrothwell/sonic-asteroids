@@ -208,7 +208,9 @@ class AsteroidsSoundService: NSObject {
     
     func makeBulletNoise(soundEvent: SoundEvent) {
         dispatchQueueNoises.async {
-            if let player = self.availablePlayer(self.shootPlayers) {
+            let n = Int(Int(soundEvent.pan ?? 0 * 100).magnitude) % Int(self.shootPlayers.count);
+            print(n);
+            if let player = self.stop(self.shootPlayers[n]) {
                 Bullet(pan: soundEvent.pan ?? 0.0, avPlayer: player).play()
             }
         }

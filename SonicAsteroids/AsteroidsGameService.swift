@@ -11,15 +11,15 @@ import Starscream
 
 class AsteroidsGameService: NSObject, WebSocketDelegate {
     func websocketDidConnect(socket: WebSocketClient) {
-        print("WebSocket connected!");
+        connectedCallback!(true, nil)
     }
     
     func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
         if let errorDefinitely = error {
-            print("WebSocket disconnected with error \(errorDefinitely.localizedDescription)")
+            connectedCallback!(false, errorDefinitely.localizedDescription)
         } else {
-            print("WebSocket disconnected cleanly.")
-        };
+            connectedCallback!(false, "Disconnected")
+        }
     }
     
     func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
@@ -28,22 +28,23 @@ class AsteroidsGameService: NSObject, WebSocketDelegate {
                 callbackDefinitely(text)
             }
             DispatchQueue.global(qos: DispatchQoS.userInteractive.qosClass).async {
-                AsteroidsSoundService.INSTANCE.processSound(text)
+                AsteroidsSoundService.INSTANCE.processSound(with: text)
             }
-        };
+        }
     }
     
     func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
-        print("got some data: \(data.count)");
     }
     
     static let INSTANCE = AsteroidsGameService() // singleton
     var callback : ((String) -> Void)?
+    var connectedCallback : ((Bool, String?) -> Void)?
     var socket : WebSocket?
     
-    func connect(_ url: URL, callback: @escaping (String) -> Void) {
+    func connect(_ url: URL, callback: @escaping (String) -> Void, connectedCallback: @escaping (Bool, String?) -> Void) {
         socket = WebSocket(url: url)
         self.callback = callback
+        self.connectedCallback = connectedCallback
         socket!.delegate = self
         socket!.connect()
     }

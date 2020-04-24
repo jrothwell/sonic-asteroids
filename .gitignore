@@ -1,5 +1,6 @@
 Carthage
-Cartfile.resolved 
+
+.DS_Store
 
 **/xcshareddata/
 **/xcuserdata/

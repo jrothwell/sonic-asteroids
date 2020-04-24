@@ -9,7 +9,6 @@
 import Cocoa
 import AVFoundation
 import SpriteKit
-import Gloss
 
 typealias Payload = [NSDictionary]
 
@@ -187,22 +186,15 @@ class AsteroidsSoundService: NSObject {
         return player
     }
     
-    func processSound(_ withText: String) {
-        var json : Payload!
-        do {
-            json = try JSONSerialization.jsonObject(with: withText.data(using: String.Encoding.utf8)!, options: JSONSerialization.ReadingOptions()) as? Payload
-        } catch {
-            print(error)
-            return
-        }
-        
-        guard let soundEvents = [SoundEvent].from(jsonArray: json as! [JSON]) else {
+    func processSound(with text: String) {
+        guard let data = text.data(using: String.Encoding.utf8),
+              let soundEvents = try? JSONDecoder().decode([SoundEvent].self, from: data) else {
             print("Bad sound stream")
             return
         }
         
         for sound in soundEvents {
-            switch sound.sound {
+            switch sound.snd {
             case .shoot?: self.makeBulletNoise(soundEvent: sound)
             case .explosion?: self.makeExplosionNoise(soundEvent: sound)
             case .none:
@@ -213,9 +205,12 @@ class AsteroidsSoundService: NSObject {
         self.eventCountThisSecond += sumSoundEvents(soundEvents)
     }
     
+    /* Map pan to bullet sound - therefore each ship should use the same sound until they hyperspace */
     func makeBulletNoise(soundEvent: SoundEvent) {
         dispatchQueueNoises.async {
-            if let player = self.availablePlayer(self.shootPlayers) {
+            let pan = Int(((soundEvent.pan ?? 0) * 100).magnitude)
+            let i = pan % self.shootPlayers.count;
+            if let player = self.stop(self.shootPlayers[i]) {
                 Bullet(pan: soundEvent.pan ?? 0.0, avPlayer: player).play()
             }
         }
@@ -282,27 +277,21 @@ struct Bullet {
     }
 }
 
-enum SoundType: String {
+enum SoundType: String, Codable {
     case shoot = "f";
     case explosion = "x";
 }
 
-struct SoundEvent : JSONDecodable {
+struct SoundEvent : Codable {
     let size: Int?
     let pan: Double?
-    let sound: SoundType?
-    
-    init?(json: JSON) {
-        self.size = "size" <~~ json;
-        self.pan = "pan" <~~ json;
-        self.sound = "snd" <~~ json;
-    }
+    let snd: SoundType?
 }
 
 func sumSoundEvents(_ soundEvents: [SoundEvent]) -> Int {
     var t = 0
     for e in soundEvents {
-        switch e.sound {
+        switch e.snd {
         case .shoot?:
             t = t + 1
         case .explosion?:

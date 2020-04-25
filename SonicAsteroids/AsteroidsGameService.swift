@@ -20,14 +20,13 @@ class AsteroidsGameService: NSObject, WebSocketDelegate {
     func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
         if let errorDefinitely = error {
             connectedCallback!(false, errorDefinitely.localizedDescription)
-                os_log("WebSocket disconnected with error: %s", log: log, type: .error, error.localizedDescription)
+                os_log("WebSocket disconnected with error: %s", log: log, type: .error, errorDefinitely.localizedDescription)
                 } else {
             connectedCallback!(false, "Disconnected")
         }
     }
 
     func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
-        os_log("Got a text data frame of length %d", log: log, type: .info, text.count)
         if let callbackDefinitely = callback {
             DispatchQueue.main.async {
                 callbackDefinitely(text)

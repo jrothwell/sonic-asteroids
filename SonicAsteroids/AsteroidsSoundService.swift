@@ -61,26 +61,22 @@ class AsteroidsSoundService: NSObject {
         playerBass = AVAudioPlayerNode()
         playerAction = AVAudioPlayerNode()
         playerAtmos.volume = 0.4
-        playerBass.volume = 0.0 // TODO fade in
+        playerBass.volume = 0.0
         playerAction.volume = 0.3
         
         shootPlayers = AsteroidsSoundService.loadSamplesToPlayers(shoot_filenames)
         explosionPlayers = AsteroidsSoundService.loadSamplesToPlayers(explosion_filenames)
         
         dispatchQueueNoises = DispatchQueue(label: "com.zuhlke.asteroids", attributes: [])
-        
     }
     
     static func loadSamplesToPlayers(_ filenames: [String]) -> [AVAudioPlayer] {
         var players = [AVAudioPlayer]()
-        for file : String in filenames {
-            if let player =  AsteroidsSoundService.setupAudioPlayerWithFile(file as NSString, type: "mp3"){
-                players.append(player)
-            }
-        }
+        filenames.compactMap { filename in
+            AsteroidsSoundService.setupAudioPlayerWithFile(filename as NSString, type: "mp3")
+            }.forEach { players.append($0)}
         return players
     }
-    
     
     static func setupAudioPlayerWithFile(_ file: NSString, type:NSString) -> AVAudioPlayer?  {
         let path = Bundle.main.path(forResource: file as String, ofType: type as String)
@@ -191,9 +187,9 @@ class AsteroidsSoundService: NSObject {
     
     func processSound(with text: String) {
         guard let data = text.data(using: String.Encoding.utf8),
-              let soundEvents = try? JSONDecoder().decode([SoundEvent].self, from: data) else {
-            os_log("Could not decode sound stream: %s", log: log, type: .error, text)
-            return
+            let soundEvents = try? JSONDecoder().decode([SoundEvent].self, from: data) else {
+                os_log("Could not decode sound stream: %s", log: log, type: .error, text)
+                return
         }
         
         for sound in soundEvents {
@@ -247,7 +243,6 @@ class AsteroidsSoundService: NSObject {
         }
         self.eventCountThisSecond = 0
     }
-    
 }
 
 

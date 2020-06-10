@@ -48,12 +48,12 @@ class SonicAsteroidsTests: XCTestCase {
 //    }
     
     func testEmptyCircularCountingList() {
-        let l = CircularCountingList(1)
+        let l = CircularCountingList(withSize: 1)
         XCTAssertEqual(0, l.sum())
     }
 
     func testFullCircularCountingList() {
-        let l = CircularCountingList(3)
+        let l = CircularCountingList(withSize: 3)
         l.add(1)
         l.add(2)
         l.add(3)
@@ -61,7 +61,7 @@ class SonicAsteroidsTests: XCTestCase {
     }
 
     func testWrapCircularCountingList() {
-        let l = CircularCountingList(3)
+        let l = CircularCountingList(withSize: 3)
         l.add(1)
         l.add(2)
         l.add(3)

@@ -9,19 +9,19 @@
 import Foundation
 
 class CircularCountingList {
-    var size:Int;
-    var counts:[Int];
-    var index = 0;
+    var size: Int
+    var counts: [Int]
+    var index = 0
     
-    init(_ theSize: Int) {
-        size = theSize;
-        counts = Array(repeating: 0, count: theSize)
+    init(withSize size: Int) {
+        self.size = size
+        counts = Array(repeating: 0, count: size)
     }
     
-    func add(_ n:Int) {
+    func add(_ n: Int) {
         counts[index] = n
-        index = index + 1
-        if (index >= size) {
+        index += 1
+        if index >= size {
             index = 0
         }
     }
@@ -31,6 +31,6 @@ class CircularCountingList {
     }
     
     func max() -> Int? {
-        return counts.max();
+        return counts.max()
     }
 }

@@ -9,11 +9,14 @@
 import Cocoa
 import AVFoundation
 import SpriteKit
+import os.log
+
+private let log = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "sound")
 
 typealias Payload = [NSDictionary]
 
 class AsteroidsSoundService: NSObject {
-    static let INSTANCE = AsteroidsSoundService()
+    static let shared = AsteroidsSoundService()
     
     var playing : Bool = false
     var engine : AVAudioEngine
@@ -26,7 +29,7 @@ class AsteroidsSoundService: NSObject {
     
     var dispatchQueueNoises : DispatchQueue
     
-    var eventCountThisSecond = 0;
+    var eventCountThisSecond = 0
     var shortRollingCount : CircularCountingList?
     var longRollingCount : CircularCountingList?
     var volumeTimer : Timer?
@@ -39,7 +42,7 @@ class AsteroidsSoundService: NSObject {
         "9",
         "1",
         "11"
-    ];
+    ]
     
     var shoot_filenames:[String] = [
         "Velocity Zapper_bip13",
@@ -50,7 +53,7 @@ class AsteroidsSoundService: NSObject {
         "Velocity Zapper_bip18",
         "Velocity Zapper_bip5",
         "Velocity Zapper_bip1"
-    ];
+    ]
     
     override init() {
         engine = AVAudioEngine()
@@ -58,28 +61,24 @@ class AsteroidsSoundService: NSObject {
         playerBass = AVAudioPlayerNode()
         playerAction = AVAudioPlayerNode()
         playerAtmos.volume = 0.4
-        playerBass.volume = 0.0 // TODO fade in
+        playerBass.volume = 0.0
         playerAction.volume = 0.3
         
         shootPlayers = AsteroidsSoundService.loadSamplesToPlayers(shoot_filenames)
         explosionPlayers = AsteroidsSoundService.loadSamplesToPlayers(explosion_filenames)
         
         dispatchQueueNoises = DispatchQueue(label: "com.zuhlke.asteroids", attributes: [])
-        
     }
     
     static func loadSamplesToPlayers(_ filenames: [String]) -> [AVAudioPlayer] {
         var players = [AVAudioPlayer]()
-        for file : String in filenames {
-            if let player =  AsteroidsSoundService.setupAudioPlayerWithFile(file as NSString, type: "mp3"){
-                players.append(player);
-            }
-        }
-        return players;
+        filenames.compactMap { filename in
+            AsteroidsSoundService.setupAudioPlayerWithFile(filename as NSString, type: "mp3")
+            }.forEach { players.append($0)}
+        return players
     }
     
-    
-    static func setupAudioPlayerWithFile(_ file:NSString, type:NSString) -> AVAudioPlayer?  {
+    static func setupAudioPlayerWithFile(_ file: NSString, type:NSString) -> AVAudioPlayer?  {
         let path = Bundle.main.path(forResource: file as String, ofType: type as String)
         let url = URL(fileURLWithPath: path!)
         
@@ -88,8 +87,8 @@ class AsteroidsSoundService: NSObject {
         do {
             try audioPlayer = AVAudioPlayer(contentsOf: url)
         } catch {
-            print("Player not available")
-            // TODO fail if we cannot play sounds...
+            os_log("Audio player not available: %s", log: log, type: .error, error.localizedDescription)
+            fatalError("Audio player not available. \(error.localizedDescription)")
         }
         
         return audioPlayer
@@ -98,7 +97,7 @@ class AsteroidsSoundService: NSObject {
     
     func start(_ path: String) {
         guard !playing else {
-            print("Already playing...")
+            os_log("Tried to start playing when we were already playing.", log: log, type: .default)
             return
         }
         
@@ -140,12 +139,12 @@ class AsteroidsSoundService: NSObject {
             playerBass.play()
             playerAction.play()
         } catch {
-            print("Error!")
+            os_log("Error starting audio: %s", log: log, type: .error, error.localizedDescription)
         }
         
-        eventCountThisSecond = 0;
-        shortRollingCount = CircularCountingList(3) // Keep  3 readings of eventCountThisSecond
-        longRollingCount = CircularCountingList(6) // Keep 6 readings of eventCountThisSecond
+        eventCountThisSecond = 0
+        shortRollingCount = CircularCountingList(withSize: 3) // Keep  3 readings of eventCountThisSecond
+        longRollingCount = CircularCountingList(withSize: 6) // Keep 6 readings of eventCountThisSecond
         
         volumeTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(volumeTimerAction), userInfo: nil, repeats: true)
         
@@ -166,11 +165,11 @@ class AsteroidsSoundService: NSObject {
     
     /* Return an idle sound player. If all are busy, choose one to be restarted! */
     func availablePlayer(_ players: [AVAudioPlayer]) -> AVAudioPlayer? {
-        let playersIdle = idle(players);
+        let playersIdle = idle(players)
         if (playersIdle.isEmpty) {
-            return stop(players.randomElement());
+            return stop(players.randomElement())
         } else {
-            return playersIdle.randomElement();
+            return playersIdle.randomElement()
         }
     }
     
@@ -188,9 +187,9 @@ class AsteroidsSoundService: NSObject {
     
     func processSound(with text: String) {
         guard let data = text.data(using: String.Encoding.utf8),
-              let soundEvents = try? JSONDecoder().decode([SoundEvent].self, from: data) else {
-            print("Bad sound stream")
-            return
+            let soundEvents = try? JSONDecoder().decode([SoundEvent].self, from: data) else {
+                os_log("Could not decode sound stream: %s", log: log, type: .error, text)
+                return
         }
         
         for sound in soundEvents {
@@ -198,7 +197,7 @@ class AsteroidsSoundService: NSObject {
             case .shoot?: self.makeBulletNoise(soundEvent: sound)
             case .explosion?: self.makeExplosionNoise(soundEvent: sound)
             case .none:
-                break;
+                break
             }
         }
         
@@ -226,15 +225,15 @@ class AsteroidsSoundService: NSObject {
     
     /* Once per second, adjust the bass volume to be the fraction of the 3s game activity over the 6s game activity */
     @objc func volumeTimerAction() {
-        self.shortRollingCount?.add(self.eventCountThisSecond);
-        self.longRollingCount?.add(self.eventCountThisSecond);
+        self.shortRollingCount?.add(self.eventCountThisSecond)
+        self.longRollingCount?.add(self.eventCountThisSecond)
         
         let volumeDelta:Float = 0.05
         DispatchQueue.main.async {
-            let n = Float(self.shortRollingCount?.sum() ?? 0);
-            let d = Float(self.longRollingCount?.sum() ?? 1) + 1.0;
+            let n = Float(self.shortRollingCount?.sum() ?? 0)
+            let d = Float(self.longRollingCount?.sum() ?? 1) + 1.0
             
-            let targetBassVolume = volumeDelta + ( (n/d) * 0.5);
+            let targetBassVolume = volumeDelta + ( (n/d) * 0.5)
             
             if (self.playerBass.volume < targetBassVolume) {
                 self.playerBass.volume = self.playerBass.volume + volumeDelta
@@ -242,9 +241,8 @@ class AsteroidsSoundService: NSObject {
                 self.playerBass.volume = max(self.playerBass.volume - volumeDelta, volumeDelta)
             }
         }
-        self.eventCountThisSecond = 0;
+        self.eventCountThisSecond = 0
     }
-    
 }
 
 
@@ -252,7 +250,7 @@ struct Explosion {
     let player : AVAudioPlayer
     
     init(pan: Double, avPlayer: AVAudioPlayer) {
-        player = avPlayer;
+        player = avPlayer
         player.pan = adjustPan(pan: pan)
         player.volume = 0.5
         player.prepareToPlay()
@@ -267,7 +265,7 @@ struct Bullet {
     let player : AVAudioPlayer
     
     init(pan: Double, avPlayer: AVAudioPlayer) {
-        player = avPlayer;
+        player = avPlayer
         player.pan = adjustPan(pan: pan)
         player.volume = 0.4
         player.prepareToPlay()
@@ -278,8 +276,8 @@ struct Bullet {
 }
 
 enum SoundType: String, Codable {
-    case shoot = "f";
-    case explosion = "x";
+    case shoot = "f"
+    case explosion = "x"
 }
 
 struct SoundEvent : Codable {
@@ -297,10 +295,10 @@ func sumSoundEvents(_ soundEvents: [SoundEvent]) -> Int {
         case .explosion?:
             t = t + 5
         case .none:
-            break;
+            break
         }
     }
-    return t;
+    return t
 }
 
 /*
@@ -313,10 +311,10 @@ func sumSoundEvents(_ soundEvents: [SoundEvent]) -> Int {
  */
 func adjustPan(pan: Double) -> Float {
     if (pan < -1.0) {
-        return 0.0;
+        return 0.0
     } else if (pan > 1.0) {
-        return 0.0;
+        return 0.0
     } else {
-        return Float(pan * pan * pan);
+        return Float(pan * pan * pan)
     }
 }
